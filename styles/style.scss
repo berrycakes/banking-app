@@ -1,0 +1,236 @@
+@import 'guide';
+@import 'transition';
+
+body {
+  height: 100vh;
+  width: 100vw;
+  background-color: $bg-color;
+  font-family: $sans;
+  font-size: 1.2rem;
+  color: $purple;
+}
+
+a {
+  font-family: $sans;
+  text-decoration: none;
+  &:visited,
+  &:active {
+    text-decoration: none;
+  }
+  &:hover {
+    color: $highlight;
+  }
+}
+
+nav {
+  margin: 10px;
+  padding: 10px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-around;
+  & div {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    & a {
+      padding-left: 10px;
+      font-size: 2rem;
+      color: inherit;
+      font-family: $serif;
+    }
+    & img {
+      height: 40px;
+      width: auto;
+    }
+  }
+  & a {
+    color: inherit;
+  }
+}
+
+// nav div {
+//   border: 2px solid blue;
+// }
+
+.page-container {
+  margin: 10px;
+  padding: 10px 10px;
+  height: 90vh;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+.form-section {
+  display: flex;
+  flex-direction: column;
+  padding: 10px 10px;
+}
+
+.title-container {
+  margin: 20px 30px 0 30px;
+  padding: 10px 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  & img {
+    height: 70px;
+  }
+}
+
+h1 {
+  font-family: $serif;
+  font-size: 3rem;
+  margin: 10px;
+  text-align: center;
+}
+#login-email-link {
+  color: inherit;
+  margin: 20px;
+  &:hover {
+    color: $highlight;
+  }
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-container {
+  align-self: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: $white;
+  padding: 20px 20px 50px 20px;
+  margin: 20px;
+  border-radius: 20px;
+}
+
+.login-fields-container {
+  display: flex;
+  align-items: center;
+  height: 60px;
+  width: 400px;
+  border-radius: 10px;
+  background-color: $bg-color;
+  margin: 5px 30px;
+}
+
+#show-password {
+  opacity: 0.5;
+  padding: 0 20px;
+  text-decoration: underline;
+  color: $gray;
+  font-size: inherit;
+  background: none;
+  border: none;
+  outline: inherit;
+  cursor: pointer;
+  &:hover {
+    color: $highlight;
+  }
+}
+#forgot-password-link,
+#sign-up-link {
+  margin-top: 10px;
+  padding: 0 20px;
+  color: $gray;
+  font-size: 1rem;
+  background: none;
+  border: none;
+  outline: inherit;
+  cursor: pointer;
+  &:hover {
+    color: $highlight;
+  }
+}
+
+.login-field {
+  width: 300px;
+  color: $purple;
+  border: transparent;
+  background-color: transparent;
+  padding: 10px;
+  width: inherit;
+  overflow: visible;
+  font-size: 1.2rem;
+  outline: none;
+  &::placeholder {
+    font-size: 1.2rem;
+    color: $gray;
+    opacity: 0.8;
+  }
+  &:focus::placeholder {
+    color: transparent;
+  }
+}
+
+#submit-login-button {
+  font-size: 1.2rem;
+  color: $purple;
+  height: inherit;
+  width: inherit;
+  border-radius: inherit;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: none;
+  background-color: $highlight;
+  cursor: pointer;
+  box-shadow: inset 0 0 0 0 $highlight;
+  transition: all ease 0.8s;
+
+  &:hover {
+    box-shadow: inset 400px 0 0 0 $purple;
+    color: $light;
+  }
+}
+
+#disclaimer {
+  font-style: italic;
+  justify-self: center;
+  align-self: center;
+  width: 500px;
+  font-size: 0.8rem;
+  text-align: justify;
+  color: $gray;
+}
+// icons
+.far {
+  color: $gray;
+  padding: 10px 20px;
+  font-size: 1.2rem;
+  text-align: center;
+  text-decoration: none;
+  opacity: 0.8;
+}
+
+.visual-section {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.visual-section-container {
+  height: auto;
+  width: 650px;
+  overflow: hidden;
+}
+
+#main-visual {
+  height: auto;
+  width: 900px;
+  margin: 0 -150px;
+}
+
+.avatar {
+  display: none;
+  height: 200px;
+  width: 200px;
+}
+
+#email-form {
+  display: none;
+}
