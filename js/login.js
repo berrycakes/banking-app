@@ -19,11 +19,14 @@ const handleLogin = (e) => {
 
   emailQuery.onerror = () => console.log('account does not exist')
   emailQuery.onsuccess = () => {
-    emailQuery.result.password === pword
-      ? window.alert('logged in')
-      : window.alert('wrong password')
+    if (emailQuery.result.password === pword) {
+      sessionStorage.setItem('user', emailAd)
+
+      location.href = '/html/dashboard.html'
+    } else {
+      alert('wrong password')
+    }
   }
-  console.log(emailQuery.result.password)
 
   transaction.oncomplete = () => db.close()
 }

@@ -23,7 +23,7 @@
         <section class="balance-container">
             <div><p>My Balance</p></div>
             <div><p id="account-balance-container">Balance here</p></div>
-            <div><p id="account-number-container">Account Number</p></div>
+            <div><button id="add-transaction-btn">Add Transaction</button></div>
         </section>
 
         <section class="income-container">
@@ -47,9 +47,21 @@
                 <h3>Date</h3>
                 <li>Activity</li>
             </ul>
+            <div>
+                <button id="add-income">add income</button>
+                <button id="transfer-money">transfer-money</button>
+                <form id="transaction-form">
+                    <input type="email" name="recipient" id="recipient" placeholder="recepient's email address" required>
+                    <p id="available-balance"></p>
+                    <input type="text" name="transfer-amount" id="transfer-amount" placeholder="amount" required>
+                </form>
+                <button id="submit-add-transaction-btn"> Confirm Transaction</button>
+            </div>
         </section>
+        
 
     </main>
+    
 
     <script type="module" src="../js/dashboard.js"></script>
     </script>

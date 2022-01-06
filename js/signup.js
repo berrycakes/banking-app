@@ -17,6 +17,7 @@ request.onupgradeneeded = () => {
   store.createIndex('lastName', ['lastName'], { unique: false })
   store.createIndex('emailAddress', ['emailAddress'], { unique: true })
   store.createIndex('password', ['password'], { unique: false })
+  store.createIndex('balance', ['balance'], { unique: false })
 }
 
 request.onsuccess = () => {
@@ -52,5 +53,7 @@ submitBtn.addEventListener('click', (e) => {
     lastName: lName,
     emailAddress: emailAd,
     password: pword,
+    balance: 0,
   })
+  location.href = '/html/login.html'
 })
