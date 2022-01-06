@@ -1,0 +1,14 @@
+.balance-container,
+.income-container,
+.expense-container {
+  text-align: right;
+  margin: 10px;
+  padding: 20px;
+  background-color: $white;
+  border-radius: 8%;
+}
+
+#account-balance-container {
+  font-size: 2rem;
+  font-weight: 700;
+}

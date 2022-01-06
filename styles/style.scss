@@ -1,5 +1,6 @@
 @import 'guide';
 @import 'transition';
+@import 'dashboard';
 
 body {
   height: 100vh;
@@ -8,6 +9,10 @@ body {
   font-family: $sans;
   font-size: 1.2rem;
   color: $purple;
+}
+
+.dashboard {
+  display: flex;
 }
 
 a {
@@ -22,26 +27,26 @@ a {
   }
 }
 
-nav {
-  margin: 10px;
-  padding: 10px;
+.dashboard-nav {
+  background-color: $white;
+  width: 20vw;
+  padding: 20px;
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   align-items: center;
-  justify-content: space-around;
+  justify-content: flex-start;
   & div {
     display: flex;
     flex-direction: row;
     align-items: center;
+    & img {
+      height: 40px;
+    }
     & a {
       padding-left: 10px;
       font-size: 2rem;
       color: inherit;
       font-family: $serif;
-    }
-    & img {
-      height: 40px;
-      width: auto;
     }
   }
   & a {
@@ -49,16 +54,33 @@ nav {
   }
 }
 
-// nav div {
-//   border: 2px solid blue;
-// }
+#user-name {
+  font-weight: 700;
+}
 
-.page-container {
+#greeting {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.dashboard-main {
+  padding: 20px;
+  width: 100%;
+  display: grid;
+  grid-template-rows: 100px 2fr 3fr;
+  grid-template-columns: 1fr 1fr 1fr;
+}
+.page-container,
+.dashboard-container {
   margin: 10px;
   padding: 10px 10px;
   height: 90vh;
   display: grid;
   grid-template-columns: 1fr 1fr;
+}
+
+#signup-page-container {
+  display: flex;
 }
 
 .form-section {
@@ -167,7 +189,8 @@ form {
   }
 }
 
-#submit-login-button {
+#submit-login-button,
+#submit-signup-button {
   font-size: 1.2rem;
   color: $purple;
   height: inherit;
@@ -214,9 +237,16 @@ form {
 }
 
 .visual-section-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   height: auto;
   width: 650px;
   overflow: hidden;
+  & img {
+    width: 500px;
+    height: auto;
+  }
 }
 
 #main-visual {
@@ -225,10 +255,12 @@ form {
   margin: 0 -150px;
 }
 
-.avatar {
-  display: none;
-  height: 200px;
-  width: 200px;
+#avatar {
+  height: 40px;
+  width: 40px;
+  position: relative;
+  top: -5px;
+  left: 5px;
 }
 
 #email-form {

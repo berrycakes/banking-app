@@ -6,23 +6,36 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Piggy Bank</title>
     <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css">
-    <link rel="stylesheet" href="./styles/style.css">
+    <link rel="stylesheet" href="../styles/style.css">
 </head>
 <body>
     <nav>
-        <div><img src="./assets/onionbankmerged.png" ><a href="../index.html">Onion Bank</a></div>
-        <a href="./html/login.html">Login</a>
-        <a href="./html/signup.html">Create an Account</a>
+        <div><img src="../assets/onionbankmerged.png" ><a href="../index.html">Onion Bank</a></div>
+        <a href="./login.html">Login</a>
+        <a href="./signup.html">Create an Account</a>
     </nav>
-    <main class="page-container">
-        <section class="form-section" id="login-section">
+    <main class="page-container" id="signup-page-container">
+        <section class="form-section" id="signup-section">
             <div class="title-container">
-                <img src="./assets/onionbankmerged.png" >
+                <img src="../assets/onionbankmerged.png" >
                 <h1 id="bank-title">Onion Bank</h1>
             </div>
-            <div class="form-container" id="login-form-container">
-                <a href="#" id="login-email-link">Login with email</a>
-                <form>
+            <div class="form-container" id="signup-form-container">
+                <a href="#" id="login-email-link">Create an Account</a>
+                <form class="form" id="signup">
+                    <div class="login-fields-container">
+                        <i class="far fa-user"></i>
+                        <input type="text" class="login-field" id="first-name" name="first-name" placeholder="First Name" required>
+                    </div>
+                    <div class="login-fields-container">
+                        <i class="far fa-user"></i>
+                        <input type="text" class="login-field" id="middle-name" name="middle-name" placeholder="Middle Name" required>
+                    </div>
+                    <div class="login-fields-container">
+                        <i class="far fa-user"></i>
+                        <input type="text" class="login-field" id="last-name" name="last-name" placeholder="Last Name" required>
+                    </div>
+                    
                     <div class="login-fields-container">
                         <i class="far fa-envelope"></i>
                         <input type="text" class="login-field" id="email" name="email" placeholder="Email" required>
@@ -33,10 +46,8 @@
                         <button id="show-password">Show</button>
                     </div>
                     <div class="login-fields-container" >
-                        <input type="submit" value="LOGIN" id="submit-login-button">
+                        <input type="submit" value="CREATE AN ACCOUNT" id="submit-signup-button">
                     </div>
-                    <button id="forgot-password-link">Forgot password? </button>
-                    <button id="sign-up-link">Don't have an account? Sign Up</button>
                 </form>
             </div>
             <div id="disclaimer">
@@ -46,11 +57,6 @@
                     A proud member of BancNet and PDIC.
                     Deposits are insured by PDIC up to PHP 500,000 per depositor.
                 </p>
-            </div>
-        </section>
-        <section class="visual-section">
-            <div class="visual-section-container">
-                <img src="./assets/visual-login.png" >
             </div>
         </section>
 
@@ -69,9 +75,9 @@
         
     </form>
 
-    <script type="module" src="main.js"></script>
-    <script src="https://smtpjs.com/v3/smtp.js">
-    </script>
+    <script type="module" src="../js/signup.js"></script>
+    <script src="https://smtpjs.com/v3/smtp.js"></script>
+
 </body>
 
 </html>
