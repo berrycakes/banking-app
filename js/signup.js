@@ -15,7 +15,7 @@ request.onupgradeneeded = () => {
   store.createIndex('firstName', ['firstName'], { unique: false })
   store.createIndex('middleName', ['middleName'], { unique: false })
   store.createIndex('lastName', ['lastName'], { unique: false })
-  store.createIndex('emailAddress', ['emailAddress'], { unique: false })
+  store.createIndex('emailAddress', ['emailAddress'], { unique: true })
   store.createIndex('password', ['password'], { unique: false })
 }
 

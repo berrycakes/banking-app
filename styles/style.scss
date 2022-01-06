@@ -11,28 +11,10 @@ body {
   color: $purple;
 }
 
-.dashboard {
-  display: flex;
-}
-
-a {
-  font-family: $sans;
-  text-decoration: none;
-  &:visited,
-  &:active {
-    text-decoration: none;
-  }
-  &:hover {
-    color: $highlight;
-  }
-}
-
-.dashboard-nav {
-  background-color: $white;
-  width: 20vw;
+nav {
   padding: 20px;
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: 3fr 1fr 1fr;
   align-items: center;
   justify-content: flex-start;
   & div {
@@ -51,6 +33,18 @@ a {
   }
   & a {
     color: inherit;
+  }
+}
+
+a {
+  font-family: $sans;
+  text-decoration: none;
+  &:visited,
+  &:active {
+    text-decoration: none;
+  }
+  &:hover {
+    color: $highlight;
   }
 }
 

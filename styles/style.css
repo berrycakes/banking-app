@@ -50,32 +50,10 @@
   font-weight: 700;
 }
 
-body {
-  height: 100vh;
-  width: 100vw;
-  background-color: #fff4ea;
-  font-family: "Manrope", sans-serif;
-  font-size: 1.2rem;
-  color: #573353;
-}
-
 .dashboard {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
-}
-
-a {
-  font-family: "Manrope", sans-serif;
-  text-decoration: none;
-}
-
-a:visited, a:active {
-  text-decoration: none;
-}
-
-a:hover {
-  color: #fea800;
 }
 
 .dashboard-nav {
@@ -123,6 +101,70 @@ a:hover {
 
 .dashboard-nav a {
   color: inherit;
+}
+
+body {
+  height: 100vh;
+  width: 100vw;
+  background-color: #fff4ea;
+  font-family: "Manrope", sans-serif;
+  font-size: 1.2rem;
+  color: #573353;
+}
+
+nav {
+  padding: 20px;
+  display: -ms-grid;
+  display: grid;
+  -ms-grid-columns: 3fr 1fr 1fr;
+      grid-template-columns: 3fr 1fr 1fr;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: start;
+      -ms-flex-pack: start;
+          justify-content: flex-start;
+}
+
+nav div {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+nav div img {
+  height: 40px;
+}
+
+nav div a {
+  padding-left: 10px;
+  font-size: 2rem;
+  color: inherit;
+  font-family: "Righteous", cursive;
+}
+
+nav a {
+  color: inherit;
+}
+
+a {
+  font-family: "Manrope", sans-serif;
+  text-decoration: none;
+}
+
+a:visited, a:active {
+  text-decoration: none;
+}
+
+a:hover {
+  color: #fea800;
 }
 
 #user-name {
