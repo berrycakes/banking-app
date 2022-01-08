@@ -487,4 +487,8 @@ form {
 #email-form {
   display: none;
 }
+
+.invisible {
+  display: none !important;
+}
 /*# sourceMappingURL=style.css.map */

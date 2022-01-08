@@ -48,14 +48,39 @@
                 <li>Activity</li>
             </ul>
             <div>
-                <button id="add-income">add income</button>
-                <button id="transfer-money">transfer-money</button>
-                <form id="transaction-form">
+                <select name="type" id="transaction-type">
+                    <option value="">type of transaction</option>
+                    <option value="deposit">Deposit</option>
+                    <option value="transfer">Transfer</option>
+                    <option value="payment">Pay Bills</option>
+                </select>
+
+                <form id="deposit-form" class="invisible">
+                    <input type="text" name="transfer-amount" id="transfer-amount" placeholder="amount deposit self" required>
+                    <button id="submit-add-transaction-btn"> Confirm Transaction</button>
+                </form>
+
+                <form id="transfer-form" class="invisible">
                     <input type="email" name="recipient" id="recipient" placeholder="recepient's email address" required>
                     <p id="available-balance"></p>
                     <input type="text" name="transfer-amount" id="transfer-amount" placeholder="amount" required>
+                    <button id="submit-add-transaction-btn"> Confirm Transaction</button>
                 </form>
-                <button id="submit-add-transaction-btn"> Confirm Transaction</button>
+
+                <form id="payment-form" class="invisible">
+                    <select name="biller" id="biller">
+                        <option value="">Choose Biller</option>
+                        <option value="">Meralco</option>
+                        <option value="">PLDT</option>
+                    </select>
+                    <input type="email" name="recipient" id="recipient" placeholder="Biller" required>
+                    <p id="available-balance"></p>
+                    <input type="text" name="transfer-amount" id="transfer-amount" placeholder="amount" required>
+                    <button id="submit-add-transaction-btn"> Confirm Transaction</button>
+                </form>
+
+                
+                
             </div>
         </section>
         
