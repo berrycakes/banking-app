@@ -56,15 +56,15 @@
                 </select>
 
                 <form id="deposit-form" class="invisible">
-                    <input type="text" name="transfer-amount" id="transfer-amount" placeholder="amount deposit self" required>
-                    <button id="submit-add-transaction-btn"> Confirm Transaction</button>
+                    <input type="text" name="deposit-amount" id="deposit-amount" class="amount" placeholder="amount deposit self" required>
+                    <button id="submit-deposit-btn"> Confirm Transaction</button>
                 </form>
 
                 <form id="transfer-form" class="invisible">
-                    <input type="email" name="recipient" id="recipient" placeholder="recepient's email address" required>
+                    <input type="email" name="recipient" id="recipient"  placeholder="recepient's email address" required>
                     <p id="available-balance"></p>
                     <input type="text" name="transfer-amount" id="transfer-amount" placeholder="amount" required>
-                    <button id="submit-add-transaction-btn"> Confirm Transaction</button>
+                    <button id="submit-transfer-btn"> Confirm Transaction</button>
                 </form>
 
                 <form id="payment-form" class="invisible">
@@ -73,10 +73,8 @@
                         <option value="">Meralco</option>
                         <option value="">PLDT</option>
                     </select>
-                    <input type="email" name="recipient" id="recipient" placeholder="Biller" required>
-                    <p id="available-balance"></p>
-                    <input type="text" name="transfer-amount" id="transfer-amount" placeholder="amount" required>
-                    <button id="submit-add-transaction-btn"> Confirm Transaction</button>
+                    <input type="text" name="payment-amount" id="payment-amount" class="amount" placeholder="amount" required>
+                    <button id="submit-payment--btn"> Confirm Transaction</button>
                 </form>
 
                 
