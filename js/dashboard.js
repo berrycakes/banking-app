@@ -1,4 +1,7 @@
-onload = () => displayUser()
+onload = () => {
+  displayUser()
+  displayTransactions()
+}
 
 const user = sessionStorage.getItem('user')
 const indexedDB = window.indexedDB
@@ -25,7 +28,29 @@ const displayUser = () => {
   }
 }
 
-// const displayTransactions
+const displayTransactions = () => {
+  const request = indexedDB.open('TransactionsDatabase', 1)
+  request.onsuccess = () => {
+    const db = request.result
+    const transaction = db.transaction('transactions', 'readwrite')
+    const store = transaction.objectStore('transactions')
+
+    const emailAddress = store.index('emailAddress')
+
+    const emailQuery = emailAddress.getAll([user])
+
+    emailQuery.onerror = () => console.log('cannot fetch account data')
+    emailQuery.onsuccess = () => {
+      emailQuery.result.forEach((element) => {
+        const activities = document.querySelector('#activities')
+        let li = document.createElement('li')
+        activities.appendChild(li)
+        li.innerHTML = element.timestamp
+      })
+    }
+    transaction.oncomplete = () => db.close()
+  }
+}
 
 // CHOOSE TRANSACTION
 const transactionTypeSelector = document.querySelector('#transaction-type')
@@ -54,7 +79,66 @@ const selectTransactionType = (event) => {
 
 transactionTypeSelector.addEventListener('change', selectTransactionType)
 
-// TODO: specify transfer function ids
+const addDepositTransaction = () => {
+  let amount = parseFloat(document.querySelector('#deposit-amount').value)
+  const request = indexedDB.open('TransactionsDatabase', 1)
+
+  request.onupgradeneeded = () => {
+    const db = request.result
+    const store = db.createObjectStore('transactions', {
+      keypath: 'id',
+      autoincrement: true,
+    })
+    store.createIndex('type', ['type'], { unique: false })
+    store.createIndex('timestamp', ['timestamp'], { unique: true })
+    store.createIndex('emailAddress', ['emailAddress'], { unique: false })
+    store.createIndex('recipientAddress', ['recipientAddress'], {
+      unique: false,
+    })
+    store.createIndex('amount', ['amount'], { unique: false })
+  }
+
+  request.onsuccess = () => {
+    const db = request.result
+    const transaction = db.transaction('transactions', 'readwrite')
+    const store = transaction.objectStore('transactions')
+
+    store.put({
+      timestamp: new Date(),
+      emailAddress: user,
+      amount: amount,
+      type: transactionTypeSelector.value,
+    })
+    transaction.oncomplete = () => {
+      console.log('added transaction')
+      db.close()
+    }
+  }
+
+  const requestAccount = indexedDB.open('AccountsDatabase', 1)
+  requestAccount.onsuccess = () => {
+    const db = requestAccount.result
+    const transaction = db.transaction('accounts', 'readwrite')
+    const store = transaction.objectStore('accounts')
+
+    const emailAddress = store.index('emailAddress')
+
+    const depositorKey = emailAddress.getKey([user])
+    depositorKey.onsuccess = () => {
+      const depositorQuery = store.get(depositorKey.result)
+      depositorQuery.onsuccess = () => {
+        const depositorData = depositorQuery.result
+        depositorData.balance += amount
+        const requestUpdate = store.put(depositorData, depositorKey.result)
+        requestUpdate.onsuccess = () => {
+          document.querySelector('#account-balance-container').innerText =
+            depositorData.balance
+        }
+      }
+    }
+  }
+}
+
 const addTransferTransaction = () => {
   let recipientAddress = document.querySelector('#recipient').value
   let amount = parseFloat(document.querySelector('#transfer-amount').value)
@@ -74,6 +158,7 @@ const addTransferTransaction = () => {
     })
     store.createIndex('amount', ['amount'], { unique: false })
   }
+
   request.onsuccess = () => {
     const db = request.result
     const transaction = db.transaction('transactions', 'readwrite')
@@ -134,6 +219,68 @@ const addTransferTransaction = () => {
   }
 }
 
+const addPaymentTransaction = () => {
+  let amount = parseFloat(document.querySelector('#payment-amount').value)
+  const request = indexedDB.open('TransactionsDatabase', 1)
+  const biller = document.querySelector('#biller').value
+
+  request.onupgradeneeded = () => {
+    const db = request.result
+    const store = db.createObjectStore('transactions', {
+      keypath: 'id',
+      autoincrement: true,
+    })
+    store.createIndex('type', ['type'], { unique: false })
+    store.createIndex('timestamp', ['timestamp'], { unique: true })
+    store.createIndex('emailAddress', ['emailAddress'], { unique: false })
+    store.createIndex('recipientAddress', ['recipientAddress'], {
+      unique: false,
+    })
+    store.createIndex('amount', ['amount'], { unique: false })
+  }
+
+  request.onsuccess = () => {
+    const db = request.result
+    const transaction = db.transaction('transactions', 'readwrite')
+    const store = transaction.objectStore('transactions')
+
+    store.put({
+      timestamp: new Date(),
+      emailAddress: user,
+      recipientAddress: biller,
+      amount: amount,
+      type: transactionTypeSelector.value,
+    })
+    transaction.oncomplete = () => {
+      console.log('added transaction')
+      db.close()
+    }
+  }
+
+  const requestAccount = indexedDB.open('AccountsDatabase', 1)
+  requestAccount.onsuccess = () => {
+    const db = requestAccount.result
+    const transaction = db.transaction('accounts', 'readwrite')
+    const store = transaction.objectStore('accounts')
+
+    const emailAddress = store.index('emailAddress')
+
+    const payorKey = emailAddress.getKey([user])
+    payorKey.onsuccess = () => {
+      const payorQuery = store.get(payorKey.result)
+      payorQuery.onsuccess = () => {
+        const payorData = payorQuery.result
+        payorData.balance -= amount
+        const requestUpdate = store.put(payorData, payorKey.result)
+        requestUpdate.onsuccess = () => {
+          document.querySelector('#account-balance-container').innerText =
+            payorData.balance
+        }
+      }
+    }
+  }
+}
+
 formDeposit.addEventListener('submit', (e) => {
   e.preventDefault()
 })
@@ -149,6 +296,6 @@ const submitDepositBtn = document.querySelector('#submit-deposit-btn')
 const submitTransferBtn = document.querySelector('#submit-transfer-btn')
 const submitPaymentBtn = document.querySelector('#submit-payment-btn')
 
-// submitDepositBtn.addEventListener('click', addTransferTransaction)
+submitDepositBtn.addEventListener('click', addDepositTransaction)
 submitTransferBtn.addEventListener('click', addTransferTransaction)
-// submitTransferBtn.addEventListener('click')
+submitPaymentBtn.addEventListener('click', addPaymentTransaction)

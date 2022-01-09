@@ -39,13 +39,7 @@
         </section>
         <section>
             <h2>Activities</h2>
-            <ul>
-                <h3>Date</h3>
-                <li>Activity</li>
-            </ul>
-            <ul>
-                <h3>Date</h3>
-                <li>Activity</li>
+            <ul id="activities">
             </ul>
             <div>
                 <select name="type" id="transaction-type">
@@ -56,7 +50,7 @@
                 </select>
 
                 <form id="deposit-form" class="invisible">
-                    <input type="text" name="deposit-amount" id="deposit-amount" class="amount" placeholder="amount deposit self" required>
+                    <input type="text" name="deposit-amount" id="deposit-amount" placeholder="amount deposit self" required>
                     <button id="submit-deposit-btn"> Confirm Transaction</button>
                 </form>
 
@@ -70,11 +64,11 @@
                 <form id="payment-form" class="invisible">
                     <select name="biller" id="biller">
                         <option value="">Choose Biller</option>
-                        <option value="">Meralco</option>
-                        <option value="">PLDT</option>
+                        <option value="meralco">Meralco</option>
+                        <option value="pldt">PLDT</option>
                     </select>
-                    <input type="text" name="payment-amount" id="payment-amount" class="amount" placeholder="amount" required>
-                    <button id="submit-payment--btn"> Confirm Transaction</button>
+                    <input type="text" name="payment-amount" id="payment-amount" placeholder="amount" required>
+                    <button id="submit-payment-btn"> Confirm Transaction</button>
                 </form>
 
                 
