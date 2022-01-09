@@ -1,5 +1,6 @@
 onload = () => {
   displayUser()
+  fetchAvatar()
   displayTransactions()
 }
 
@@ -19,13 +20,23 @@ const displayUser = () => {
 
     emailQuery.onerror = () => console.log('cannot fetch account data')
     emailQuery.onsuccess = () => {
-      document.querySelector('#user-name').innerText =
-        emailQuery.result.firstName
-      document.querySelector('#account-balance-container').innerText =
-        emailQuery.result.balance
+      const account = emailQuery.result
+      document.querySelector(
+        '#user-name'
+      ).innerText = `Hello, ${account.firstName}`
+      document.querySelector('#account-balance-container').innerHTML =
+        parseFloat(account.balance).toFixed(2)
+      document.querySelector(
+        '#account-name-container'
+      ).innerHTML = `${account.firstName} ${account.lastName}`
     }
     transaction.oncomplete = () => db.close()
   }
+}
+
+const fetchAvatar = () => {
+  let url = `https://avatars.dicebear.com/api/big-smile/${user}.svg?`
+  document.querySelector('#avatar').src = url
 }
 
 const displayTransactions = () => {
@@ -43,9 +54,17 @@ const displayTransactions = () => {
     emailQuery.onsuccess = () => {
       emailQuery.result.forEach((element) => {
         const activities = document.querySelector('#activities')
-        let li = document.createElement('li')
-        activities.appendChild(li)
-        li.innerHTML = element.timestamp
+        let tr = document.createElement('tr')
+        activities.appendChild(tr)
+        const newTimestamp = new Date(element.timestamp)
+        tr.innerHTML = `<td>${newTimestamp.toUTCString().substring(4)} </td>
+                        <td>${element.type}</td>
+                        <td>${element.recipientAddress}</td>
+                        <td class="currency ${
+                          element.type
+                        }" id="amount-column">${parseFloat(
+          element.amount
+        ).toFixed(2)}</td>`
       })
     }
     transaction.oncomplete = () => db.close()
@@ -108,6 +127,7 @@ const addDepositTransaction = () => {
       emailAddress: user,
       amount: amount,
       type: transactionTypeSelector.value,
+      recipientAddress: 'cash-in',
     })
     transaction.oncomplete = () => {
       console.log('added transaction')
@@ -132,7 +152,7 @@ const addDepositTransaction = () => {
         const requestUpdate = store.put(depositorData, depositorKey.result)
         requestUpdate.onsuccess = () => {
           document.querySelector('#account-balance-container').innerText =
-            depositorData.balance
+            depositorData.balance.toFixed(2)
         }
       }
     }
@@ -141,7 +161,9 @@ const addDepositTransaction = () => {
 
 const addTransferTransaction = () => {
   let recipientAddress = document.querySelector('#recipient').value
-  let amount = parseFloat(document.querySelector('#transfer-amount').value)
+  let amount = parseFloat(
+    document.querySelector('#transfer-amount').value
+  ).toFixed(2)
   const request = indexedDB.open('TransactionsDatabase', 1)
 
   request.onupgradeneeded = () => {
@@ -195,7 +217,7 @@ const addTransferTransaction = () => {
         const requestUpdateSender = store.put(senderData, senderKey.result)
         requestUpdateSender.onsuccess = () => {
           document.querySelector('#account-balance-container').innerText =
-            senderData.balance
+            parseFloat(senderData.balance).toFixed(2)
         }
       }
     }
@@ -220,7 +242,9 @@ const addTransferTransaction = () => {
 }
 
 const addPaymentTransaction = () => {
-  let amount = parseFloat(document.querySelector('#payment-amount').value)
+  let amount = parseFloat(
+    document.querySelector('#payment-amount').value
+  ).toFixed(2)
   const request = indexedDB.open('TransactionsDatabase', 1)
   const biller = document.querySelector('#biller').value
 
@@ -274,11 +298,15 @@ const addPaymentTransaction = () => {
         const requestUpdate = store.put(payorData, payorKey.result)
         requestUpdate.onsuccess = () => {
           document.querySelector('#account-balance-container').innerText =
-            payorData.balance
+            parseFloat(payorData.balance).toFixed(2)
         }
       }
     }
   }
+}
+
+const showTransactionContainer = () => {
+  document.querySelector('#transaction-container').classList.remove('invisible')
 }
 
 formDeposit.addEventListener('submit', (e) => {
@@ -292,10 +320,50 @@ formPayment.addEventListener('submit', (e) => {
 })
 
 // TODO: Submit Transactions
+const newTransactionBtn = document.querySelector('#add-transaction-btn')
 const submitDepositBtn = document.querySelector('#submit-deposit-btn')
 const submitTransferBtn = document.querySelector('#submit-transfer-btn')
 const submitPaymentBtn = document.querySelector('#submit-payment-btn')
 
+newTransactionBtn.addEventListener('click', showTransactionContainer)
 submitDepositBtn.addEventListener('click', addDepositTransaction)
 submitTransferBtn.addEventListener('click', addTransferTransaction)
 submitPaymentBtn.addEventListener('click', addPaymentTransaction)
+
+const ctx = document.getElementById('myChart').getContext('2d')
+const myChart = new Chart(ctx, {
+  type: 'bar',
+  data: {
+    labels: ['red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+    datasets: [
+      {
+        label: '# of Votes',
+        data: [12, 19, 3, 5, 2, 3],
+        backgroundColor: [
+          'rgba(255, 99, 132, 0.2)',
+          'rgba(54, 162, 235, 0.2)',
+          'rgba(255, 206, 86, 0.2)',
+          'rgba(75, 192, 192, 0.2)',
+          'rgba(153, 102, 255, 0.2)',
+          'rgba(255, 159, 64, 0.2)',
+        ],
+        borderColor: [
+          'rgba(255, 99, 132, 1)',
+          'rgba(54, 162, 235, 1)',
+          'rgba(255, 206, 86, 1)',
+          'rgba(75, 192, 192, 1)',
+          'rgba(153, 102, 255, 1)',
+          'rgba(255, 159, 64, 1)',
+        ],
+        borderWidth: 1,
+      },
+    ],
+  },
+  options: {
+    scales: {
+      y: {
+        beginAtZero: true,
+      },
+    },
+  },
+})

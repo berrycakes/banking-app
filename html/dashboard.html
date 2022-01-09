@@ -11,79 +11,88 @@
 <body class="dashboard">
     <nav class="dashboard-nav">
         <div><img id-="dashboard-nav-logo" src="../assets/onionbankmerged.png" ><a href="../index.html">Onion Bank</a></div>
-        <div>Dashboard</div>
-        <div>Transactions</div>
-        <div>Transfers</div>
-
+        <div id="greeting"> <span id="user-name"> user</span> <img src='https://avatars.dicebear.com/api/bottts/berrycake.svg' alt="" id="avatar"></div>
+        <a class="nav-option">Dashboard</a>
+        <a  class="nav-option">New Transaction</a>
+        <a  class="nav-option">Activities</a>
+        <a  class="nav-option">Logout</a>
+        
     </nav>
     <main class="dashboard-main">
-        <div></div>
-        <div></div>
-        <div id="greeting"> Hi, <span id="user-name">user</span> <img src='https://avatars.dicebear.com/api/bottts/berrycake.svg' alt="" id="avatar"></div>
+        
+        <div id="dashboard-cards">
         <section class="balance-container">
-            <div><p>My Balance</p></div>
-            <div><p id="account-balance-container">Balance here</p></div>
-            <div><button id="add-transaction-btn">Add Transaction</button></div>
+            <div><p id="account-name-container">My Balance</p></div>
+            <div><p id="account-balance-label">Account Balance</p></div>
+            <div><p id="account-balance-container" class="currency">Balance here</p></div>
         </section>
 
         <section class="income-container">
-            <div><p>Income</p></div>
-            <div><p id="account-income-container">Balance here</p></div>
-            <div>chart.js</div>
+            <div><canvas id="myChartSmall" width="300" height="200"></canvas></div>
         </section>
 
         <section class="expense-container">
             <div><p>Expense</p></div>
             <div><p id="account-expense-container">Balance here</p></div>
             <div>chart.js</div>
+            <div><button id="add-transaction-btn">Add Transaction</button></div>
         </section>
-        <section>
-            <h2>Activities</h2>
-            <ul id="activities">
-            </ul>
-            <div>
-                <select name="type" id="transaction-type">
-                    <option value="">type of transaction</option>
-                    <option value="deposit">Deposit</option>
-                    <option value="transfer">Transfer</option>
-                    <option value="payment">Pay Bills</option>
+    </div>
+    <section id="transaction-container" class="invisible">
+            <select name="type" id="transaction-type">
+                <option value="">type of transaction</option>
+                <option value="deposit">Deposit</option>
+                <option value="transfer">Transfer</option>
+                <option value="payment">Pay Bills</option>
+            </select>
+
+            <form id="deposit-form" class="invisible">
+                <input type="text" name="deposit-amount" id="deposit-amount" placeholder="amount deposit self" required>
+                <button id="submit-deposit-btn"> Confirm Transaction</button>
+            </form>
+
+            <form id="transfer-form" class="invisible">
+                <input type="email" name="recipient" id="recipient"  placeholder="recepient's email address" required>
+                <p id="available-balance"></p>
+                <input type="text" name="transfer-amount" id="transfer-amount" placeholder="amount" required>
+                <button id="submit-transfer-btn"> Confirm Transaction</button>
+            </form>
+
+            <form id="payment-form" class="invisible">
+                <select name="biller" id="biller">
+                    <option value="">Choose Biller</option>
+                    <option value="meralco">Meralco</option>
+                    <option value="pldt">PLDT</option>
                 </select>
-
-                <form id="deposit-form" class="invisible">
-                    <input type="text" name="deposit-amount" id="deposit-amount" placeholder="amount deposit self" required>
-                    <button id="submit-deposit-btn"> Confirm Transaction</button>
-                </form>
-
-                <form id="transfer-form" class="invisible">
-                    <input type="email" name="recipient" id="recipient"  placeholder="recepient's email address" required>
-                    <p id="available-balance"></p>
-                    <input type="text" name="transfer-amount" id="transfer-amount" placeholder="amount" required>
-                    <button id="submit-transfer-btn"> Confirm Transaction</button>
-                </form>
-
-                <form id="payment-form" class="invisible">
-                    <select name="biller" id="biller">
-                        <option value="">Choose Biller</option>
-                        <option value="meralco">Meralco</option>
-                        <option value="pldt">PLDT</option>
-                    </select>
-                    <input type="text" name="payment-amount" id="payment-amount" placeholder="amount" required>
-                    <button id="submit-payment-btn"> Confirm Transaction</button>
-                </form>
-
-                
-                
-            </div>
-        </section>
-        
-
+                <input type="text" name="payment-amount" id="payment-amount" placeholder="amount" required>
+                <button id="submit-payment-btn"> Confirm Transaction</button>
+            </form>
+    </section>
+    <section id="activity-container">
+        <h2>Expenses</h2>
+        <div><canvas id="myChart" width="300" height="100"></canvas></div>
+    </section>
+    <section id="activity-container">
+        <h2>Activities</h2>
+        <table id='activities'>
+            <tr>
+                <th>date and time</th>
+                <th>transaction type</th>
+                <th>recipient</th>
+                <th>amount</th>
+            </tr>
+            
+        </table>
+    </section>
     </main>
     
 
     <script type="module" src="../js/dashboard.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.0/dist/chart.min.js"></script>
     </script>
 </body>
 
     
 </body>
 </html>
+

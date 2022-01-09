@@ -1,75 +1,118 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Piggy Bank</title>
-    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css">
-    <link rel="stylesheet" href="../styles/style.css">
-</head>
-<body>
+    <link
+      rel="stylesheet"
+      href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css"
+    />
+    <link rel="stylesheet" href="../styles/style.css" />
+  </head>
+  <body>
     <nav>
-        <div><img src="../assets/onionbankmerged.png" ><a href="../index.html">Onion Bank</a></div>
-        <a href="./login.html">Login</a>
-        <a href="./signup.html">Create an Account</a>
+      <div>
+        <img src="../assets/onionbankmerged.png" /><a href="../index.html"
+          >Onion Bank</a
+        >
+      </div>
+      <a href="./login.html">Login</a>
+      <a href="./signup.html">Create an Account</a>
     </nav>
     <main class="page-container" id="signup-page-container">
-        <section class="form-section" id="signup-section">
-            <div class="title-container">
+      <section class="form-section" id="signup-section">
+        <!-- <div class="title-container">
                 <img src="../assets/onionbankmerged.png" >
                 <h1 id="bank-title">Onion Bank</h1>
+            </div> -->
+        <div class="form-container" id="signup-form-container">
+          <a href="#" id="login-email-link">Create an Account</a>
+          <form class="form" id="signup">
+            <div class="login-fields-container">
+              <i class="far fa-user"></i>
+              <input
+                type="text"
+                class="login-field"
+                id="first-name"
+                name="first-name"
+                placeholder="First Name"
+                required
+              />
             </div>
-            <div class="form-container" id="signup-form-container">
-                <a href="#" id="login-email-link">Create an Account</a>
-                <form class="form" id="signup">
-                    <div class="login-fields-container">
-                        <i class="far fa-user"></i>
-                        <input type="text" class="login-field" id="first-name" name="first-name" placeholder="First Name" required>
-                    </div>
-                    <div class="login-fields-container">
-                        <i class="far fa-user"></i>
-                        <input type="text" class="login-field" id="middle-name" name="middle-name" placeholder="Middle Name" required>
-                    </div>
-                    <div class="login-fields-container">
-                        <i class="far fa-user"></i>
-                        <input type="text" class="login-field" id="last-name" name="last-name" placeholder="Last Name" required>
-                    </div>
-                    
-                    <div class="login-fields-container">
-                        <i class="far fa-envelope"></i>
-                        <input type="text" class="login-field" id="email" name="email" placeholder="Email" required>
-                    </div>
-                    <div class="login-fields-container">
-                        <i class="far fa-lock"></i>
-                        <input type="password" class="login-field" id="password" name="password" placeholder="Password" required>
-                        <button id="show-password">Show</button>
-                    </div>
-                    <div class="login-fields-container" >
-                        <input type="submit" value="CREATE AN ACCOUNT" id="submit-signup-button">
-                    </div>
-                </form>
+            <div class="login-fields-container">
+              <i class="far fa-user"></i>
+              <input
+                type="text"
+                class="login-field"
+                id="middle-name"
+                name="middle-name"
+                placeholder="Middle Name"
+                required
+              />
             </div>
-            <div id="disclaimer">
-                <p>
-                    Onion Bank of the Philippines is regulated by the Bangko Sentral ng Pilipinas. 
-                    For inquiries and comments, please contact our 24-Hour Customer Service.
-                    A proud member of BancNet and PDIC.
-                    Deposits are insured by PDIC up to PHP 500,000 per depositor.
-                </p>
+            <div class="login-fields-container">
+              <i class="far fa-user"></i>
+              <input
+                type="text"
+                class="login-field"
+                id="last-name"
+                name="last-name"
+                placeholder="Last Name"
+                required
+              />
             </div>
-        </section>
-        <section class="visual-section">
-            <div class="visual-section-container">
-                <img src="../assets/visual-signup.png" >
-            </div>
-        </section>
 
+            <div class="login-fields-container">
+              <i class="far fa-envelope"></i>
+              <input
+                type="text"
+                class="login-field"
+                id="email"
+                name="email"
+                placeholder="Email"
+                required
+              />
+            </div>
+            <div class="login-fields-container">
+              <i class="far fa-lock"></i>
+              <input
+                type="password"
+                class="login-field"
+                id="password"
+                name="password"
+                placeholder="Password"
+                required
+              />
+              <button id="show-password">Show</button>
+            </div>
+            <div class="login-fields-container">
+              <input
+                type="submit"
+                value="CREATE AN ACCOUNT"
+                id="submit-signup-button"
+              />
+            </div>
+          </form>
+        </div>
+        <div id="disclaimer">
+          <p>
+            Onion Bank of the Philippines is regulated by the Bangko Sentral ng
+            Pilipinas. For inquiries and comments, please contact our 24-Hour
+            Customer Service. A proud member of BancNet and PDIC. Deposits are
+            insured by PDIC up to PHP 500,000 per depositor.
+          </p>
+        </div>
+      </section>
+      <section class="visual-section">
+        <div class="visual-section-container">
+          <img src="../assets/visual-signup.png" />
+        </div>
+      </section>
     </main>
-    
+
     <script type="module" src="../js/signup.js"></script>
     <script src="https://smtpjs.com/v3/smtp.js"></script>
-
-</body>
-
+  </body>
 </html>
