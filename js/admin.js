@@ -7,35 +7,35 @@ onload = () => {
 const user = sessionStorage.getItem('user')
 const indexedDB = window.indexedDB
 
-const displayUser = () => {
-  const request = indexedDB.open('AccountsDatabase', 1)
-  request.onsuccess = () => {
-    const db = request.result
-    const transaction = db.transaction('accounts', 'readwrite')
-    const store = transaction.objectStore('accounts')
+// const displayUser = () => {
+//   const request = indexedDB.open('AccountsDatabase', 1)
+//   request.onsuccess = () => {
+//     const db = request.result
+//     const transaction = db.transaction('accounts', 'readwrite')
+//     const store = transaction.objectStore('accounts')
 
-    const emailAddress = store.index('emailAddress')
+//     const emailAddress = store.index('emailAddress')
 
-    const emailQuery = emailAddress.get([user])
+//     const emailQuery = emailAddress.get([user])
 
-    emailQuery.onerror = () => console.log('cannot fetch account data')
-    emailQuery.onsuccess = () => {
-      const account = emailQuery.result
-      document.querySelector(
-        '#user-name'
-      ).innerText = `Hello, ${account.firstName}`
-      document.querySelector('#account-balance-container').innerHTML =
-        parseFloat(account.balance).toFixed(2)
-      document.querySelector(
-        '#account-name-container'
-      ).innerHTML = `${account.firstName} ${account.lastName}`
-    }
-    transaction.oncomplete = () => db.close()
-  }
-}
+//     emailQuery.onerror = () => console.log('cannot fetch account data')
+//     emailQuery.onsuccess = () => {
+//       const account = emailQuery.result
+//       document.querySelector(
+//         '#user-name'
+//       ).innerText = `Hello, ${account.firstName}`
+//       document.querySelector('#account-balance-container').innerHTML =
+//         parseFloat(account.balance).toFixed(2)
+//       document.querySelector(
+//         '#account-name-container'
+//       ).innerHTML = `${account.firstName} ${account.lastName}`
+//     }
+//     transaction.oncomplete = () => db.close()
+//   }
+// }
 
 const fetchAvatar = () => {
-  let url = `https://avatars.dicebear.com/api/big-smile/${user}.svg?`
+  let url = `https://avatars.dicebear.com/api/big-smile/admin.svg?`
   document.querySelector('#avatar').src = url
 }
 
@@ -48,103 +48,28 @@ const displayTransactions = () => {
 
     const emailAddress = store.index('emailAddress')
 
-    const emailQuery = emailAddress.getAll([user])
+    const emailQuery = emailAddress.getAll()
 
     emailQuery.onerror = () => console.log('cannot fetch account data')
     emailQuery.onsuccess = () => {
-      let depositsAmount = 0
-      let transfersAmount = 0
-      let paymentsAmount = 0
       emailQuery.result.forEach((element) => {
         const activities = document.querySelector('#activities')
         let tr = document.createElement('tr')
         activities.appendChild(tr)
         const newTimestamp = new Date(element.timestamp)
         tr.innerHTML = `<td>${newTimestamp.toUTCString().substring(4)} </td>
-                        <td>${element.type}</td>
-                        <td>${element.recipientAddress}</td>
-                        <td class="currency ${
-                          element.type
-                        }" id="amount-column">${parseFloat(
+                          <td>${element.type}</td>
+                          <td>${element.recipientAddress}</td>
+                          <td class="currency ${
+                            element.type
+                          }" id="amount-column">${parseFloat(
           element.amount
         ).toFixed(2)}</td>`
-        if (element.type === 'deposit') {
-          depositsAmount += parseFloat(element.amount)
-        }
-        if (element.type === 'transfer') {
-          transfersAmount += parseFloat(element.amount)
-        }
-        if (element.type === 'payment') {
-          paymentsAmount += parseFloat(element.amount)
-        }
-        console.log(depositsAmount)
       })
-      document.querySelector('#account-income-container').innerHTML =
-        parseFloat(depositsAmount).toFixed(2)
-      document.querySelector('#account-expense-container').innerHTML =
-        parseFloat(transfersAmount + paymentsAmount).toFixed(2)
-      const ctx = document.getElementById('myChart').getContext('2d')
-      const myChart = new Chart(ctx, {
-        type: 'bar',
-        data: {
-          labels: ['deposits', 'transfers', 'bills payment'],
-          datasets: [
-            {
-              label: ['income'],
-              data: [depositsAmount, transfersAmount, paymentsAmount],
-              backgroundColor: [
-                'rgba(54, 162, 235, 0.2)',
-                'rgba(255, 206, 86, 0.2)',
-                'rgba(75, 192, 192, 0.2)',
-              ],
-              borderColor: [
-                'rgba(54, 162, 235, 1)',
-                'rgba(255, 206, 86, 1)',
-                'rgba(75, 192, 192, 1)',
-              ],
-              borderWidth: 1,
-            },
-          ],
-        },
-        options: {
-          scales: {
-            y: {
-              beginAtZero: true,
-            },
-          },
-        },
-      })
-      transaction.oncomplete = () => db.close()
     }
+    transaction.oncomplete = () => db.close()
   }
 }
-
-// CHOOSE TRANSACTION
-const transactionTypeSelector = document.querySelector('#transaction-type')
-const formTransfer = document.querySelector('#transfer-form')
-const formDeposit = document.querySelector('#deposit-form')
-const formPayment = document.querySelector('#payment-form')
-
-const selectTransactionType = (event) => {
-  let value = event.target.value
-  if (value === 'deposit') {
-    formDeposit.classList.remove('invisible')
-    formTransfer.classList.add('invisible')
-    formPayment.classList.add('invisible')
-  }
-  if (value === 'transfer') {
-    formDeposit.classList.add('invisible')
-    formTransfer.classList.remove('invisible')
-    formPayment.classList.add('invisible')
-  }
-  if (value === 'payment') {
-    formDeposit.classList.add('invisible')
-    formTransfer.classList.add('invisible')
-    formPayment.classList.remove('invisible')
-  }
-}
-
-transactionTypeSelector.addEventListener('change', selectTransactionType)
 
 const addDepositTransaction = () => {
   let amount = parseFloat(document.querySelector('#deposit-amount').value)
@@ -378,12 +303,43 @@ submitDepositBtn.addEventListener('click', addDepositTransaction)
 submitTransferBtn.addEventListener('click', addTransferTransaction)
 submitPaymentBtn.addEventListener('click', addPaymentTransaction)
 
-const logoutBtn = document.querySelector('#logout')
-const handleLogout = () => {
-  sessionStorage.clear()
-  document.location = '../index.html'
-}
-logoutBtn.addEventListener('click', handleLogout)
+const ctx = document.getElementById('myChart').getContext('2d')
+const myChart = new Chart(ctx, {
+  type: 'bar',
+  data: {
+    labels: ['red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+    datasets: [
+      {
+        label: '# of Votes',
+        data: [12, 19, 3, 5, 2, 3],
+        backgroundColor: [
+          'rgba(255, 99, 132, 0.2)',
+          'rgba(54, 162, 235, 0.2)',
+          'rgba(255, 206, 86, 0.2)',
+          'rgba(75, 192, 192, 0.2)',
+          'rgba(153, 102, 255, 0.2)',
+          'rgba(255, 159, 64, 0.2)',
+        ],
+        borderColor: [
+          'rgba(255, 99, 132, 1)',
+          'rgba(54, 162, 235, 1)',
+          'rgba(255, 206, 86, 1)',
+          'rgba(75, 192, 192, 1)',
+          'rgba(153, 102, 255, 1)',
+          'rgba(255, 159, 64, 1)',
+        ],
+        borderWidth: 1,
+      },
+    ],
+  },
+  options: {
+    scales: {
+      y: {
+        beginAtZero: true,
+      },
+    },
+  },
+})
 
 // TODO: 1. Sort table
 // 2. query TX for expense tracker

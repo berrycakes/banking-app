@@ -15,7 +15,7 @@
         <a class="nav-option">Dashboard</a>
         <a  class="nav-option">New Transaction</a>
         <a  class="nav-option">Activities</a>
-        <a  class="nav-option">Logout</a>
+        <a  class="nav-option" id="logout">Logout</a>
         
     </nav>
     <main class="dashboard-main">
@@ -27,16 +27,23 @@
             <div><p id="account-balance-container" class="currency">Balance here</p></div>
         </section>
 
-        <section class="income-container">
-            <div><canvas id="myChartSmall" width="300" height="200"></canvas></div>
+        <section class="expense-container">
+            
+            <div><h3>Expenses</h3></div>
+            <div><p id="account-expense-container" class="currency">- -</p></div>
+            <div><button id="add-transaction-btn">Add Expense</button></div>
+            
+            
         </section>
 
-        <section class="expense-container">
-            <div><p>Expense</p></div>
-            <div><p id="account-expense-container">Balance here</p></div>
-            <div>chart.js</div>
-            <div><button id="add-transaction-btn">Add Transaction</button></div>
+        <section class="income-container">
+            <div><h3>Income</h3></div>
+            <div><p id="account-income-container" class="currency">- -</p></div>
+            <div><button id="add-transaction-btn">Add Income</button></div>
+            
         </section>
+
+        
     </div>
     <section id="transaction-container" class="invisible">
             <select name="type" id="transaction-type">
@@ -69,7 +76,7 @@
             </form>
     </section>
     <section id="activity-container">
-        <h2>Expenses</h2>
+        <h2>Income and Expense Flow</h2>
         <div><canvas id="myChart" width="300" height="100"></canvas></div>
     </section>
     <section id="activity-container">

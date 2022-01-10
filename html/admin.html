@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css">
+    <link rel="stylesheet" href="../styles/style.css">
+</head>
+<body class="dashboard">
+    <nav class="dashboard-nav">
+        <div><img id-="dashboard-nav-logo" src="../assets/onionbankmerged.png" ><a href="../index.html">Onion Bank</a></div>
+        <div id="greeting"> <span id="user-name">Admin</span> <img src='https://avatars.dicebear.com/api/bottts/admin.svg' alt="" id="avatar"></div>
+        <a class="nav-option">Dashboard</a>
+        <a  class="nav-option">New Transaction</a>
+        <a  class="nav-option">Activities</a>
+        <a  class="nav-option">Logout</a>
+        
+    </nav>
+    <main class="dashboard-main">
+
+    <section id="transaction-container">
+        <form id="transfer-form">
+            <input type="email" name="recipient" id="recipient"  placeholder="recepient's email address" required>
+            <p id="available-balance"></p>
+            <input type="text" name="transfer-amount" id="transfer-amount" placeholder="amount" required>
+            <button id="submit-transfer-btn"> Confirm Transaction</button>
+        </form>
+    </section>
+
+    <section id="activity-container">
+        <h2>Activities</h2>
+        <table id='activities'>
+            <tr>
+                <th>date and time</th>
+                <th>transaction type</th>
+                <th>recipient</th>
+                <th>amount</th>
+            </tr>
+            
+        </table>
+    </section>
+    </main>
+    <script type="module" src="../js/admin.js"></script>
+    </script>
+</body>
+
+    
+</body>
+</html>
+

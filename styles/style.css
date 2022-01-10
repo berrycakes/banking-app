@@ -36,7 +36,8 @@
   }
 }
 
-#greeting {
+#greeting,
+h3 {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -160,6 +161,7 @@
 
 .nav-option:hover:not(.active) {
   background-color: #796376;
+  opacity: 0.7;
   color: white;
 }
 
@@ -261,6 +263,87 @@
   border-left: 2px solid white;
 }
 
+#transaction-container form {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+}
+
+#add-transaction-btn,
+#submit-deposit-btn,
+#submit-transfer-btn,
+#submit-payment-btn {
+  margin-top: 0;
+  margin: 10px;
+  display: inline-block;
+  padding: 12px 16px;
+  border: 0;
+  text-decoration: none;
+  border-radius: 15px;
+  background-color: rgba(255, 255, 255, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  -webkit-backdrop-filter: blur(30px);
+          backdrop-filter: blur(30px);
+  -webkit-box-shadow: 0 2px 4px 0 rgba(78, 64, 64, 0.37);
+          box-shadow: 0 2px 4px 0 rgba(78, 64, 64, 0.37);
+  color: #573353;
+  font-size: 1rem;
+  letter-spacing: 2px;
+  cursor: pointer;
+  text-transform: uppercase;
+}
+
+#add-transaction-btn:hover,
+#submit-deposit-btn:hover,
+#submit-transfer-btn:hover,
+#submit-payment-btn:hover {
+  background-color: rgba(144, 51, 197, 0.2);
+  -webkit-transition: all ease 0.8s;
+  transition: all ease 0.8s;
+}
+
+#transaction-type,
+#deposit-amount,
+#recipient,
+#biller,
+#transfer-amount,
+#payment-amount {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  height: 60px;
+  width: 400px;
+  border-radius: 10px;
+  background-color: #fff4ea;
+  margin: 5px 30px;
+  border: none;
+  font-size: inherit;
+  font-family: inherit;
+  color: inherit;
+  padding-left: 20px;
+}
+
+select {
+  border: none;
+  font-size: inherit;
+  font-family: inherit;
+  color: inherit;
+  padding-left: 20px;
+}
+
 td {
   font-size: 1rem;
 }
@@ -280,6 +363,7 @@ html {
 }
 
 body {
+  height: 100%;
   font-family: "Manrope", sans-serif;
   font-size: 1.2rem;
   color: #573353;
@@ -294,8 +378,8 @@ nav {
   padding: 20px;
   display: -ms-grid;
   display: grid;
-  -ms-grid-columns: 3fr 1fr 1fr;
-      grid-template-columns: 3fr 1fr 1fr;
+  -ms-grid-columns: 1fr 5fr 5fr;
+      grid-template-columns: 1fr 5fr 5fr;
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
@@ -354,12 +438,6 @@ a:hover {
   display: grid;
   -ms-grid-columns: 1fr 1fr;
       grid-template-columns: 1fr 1fr;
-}
-
-#signup-page-container {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
 }
 
 .form-section {
@@ -430,7 +508,14 @@ form {
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
-  background-color: #ffffff;
+  background-color: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+  -webkit-box-shadow: 0 8px 16px 0 rgba(78, 64, 64, 0.37);
+          box-shadow: 0 8px 16px 0 rgba(78, 64, 64, 0.37);
+  background-image: linear-gradient(155deg, rgba(255, 255, 255, 0.72), rgba(255, 255, 255, 0));
+  border-top: 2px solid white;
+  border-left: 2px solid white;
   padding: 20px 20px 50px 20px;
   margin: 20px;
   border-radius: 20px;
@@ -450,7 +535,8 @@ form {
   margin: 5px 30px;
 }
 
-#show-password {
+#show-password,
+#hide-password {
   opacity: 0.5;
   padding: 0 20px;
   text-decoration: underline;
@@ -462,7 +548,8 @@ form {
   cursor: pointer;
 }
 
-#show-password:hover {
+#show-password:hover,
+#hide-password:hover {
   color: #fea800;
 }
 
@@ -593,9 +680,9 @@ form {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
+  -webkit-box-align: start;
+      -ms-flex-align: start;
+          align-items: flex-start;
   -webkit-box-pack: center;
       -ms-flex-pack: center;
           justify-content: center;
@@ -605,9 +692,6 @@ form {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
   -webkit-box-pack: center;
       -ms-flex-pack: center;
           justify-content: center;
@@ -637,5 +721,119 @@ form {
 
 .invisible {
   display: none !important;
+}
+
+#landing-page-button-container {
+  margin-top: 50px;
+  margin-left: 100px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  width: inherit;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+}
+
+#landing-page-button-container button {
+  margin: 10px;
+  display: inline-block;
+  padding: 24px 32px;
+  border: 0;
+  text-decoration: none;
+  border-radius: 15px;
+  background-color: rgba(255, 255, 255, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  -webkit-backdrop-filter: blur(30px);
+          backdrop-filter: blur(30px);
+  -webkit-box-shadow: 0 8px 16px 0 rgba(78, 64, 64, 0.37);
+          box-shadow: 0 8px 16px 0 rgba(78, 64, 64, 0.37);
+  color: #573353;
+  font-size: 1rem;
+  letter-spacing: 2px;
+  cursor: pointer;
+  text-transform: uppercase;
+}
+
+#landing-page-button-container button:hover {
+  background-color: rgba(144, 51, 197, 0.2);
+  -webkit-transition: all ease 0.8s;
+  transition: all ease 0.8s;
+}
+
+#nav-page-button-container {
+  margin-left: 100px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  width: inherit;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+}
+
+#nav-page-button-container button {
+  margin-top: 0;
+  margin: 10px;
+  display: inline-block;
+  padding: 12px 16px;
+  border: 0;
+  text-decoration: none;
+  border-radius: 15px;
+  background-color: rgba(255, 255, 255, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  -webkit-backdrop-filter: blur(30px);
+          backdrop-filter: blur(30px);
+  -webkit-box-shadow: 0 2px 4px 0 rgba(78, 64, 64, 0.37);
+          box-shadow: 0 2px 4px 0 rgba(78, 64, 64, 0.37);
+  color: #573353;
+  font-size: 1rem;
+  letter-spacing: 2px;
+  cursor: pointer;
+  text-transform: uppercase;
+}
+
+#nav-page-button-container button:hover {
+  background-color: rgba(144, 51, 197, 0.2);
+  -webkit-transition: all ease 0.8s;
+  transition: all ease 0.8s;
+}
+
+#slogan {
+  margin-top: 50px;
+  font-family: "Manrope", sans-serif;
+  font-weight: 100;
+  letter-spacing: 2px;
+  text-align: left;
+  margin-left: 100px;
+  font-size: 3.5rem;
+}
+
+#title-section {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-pack: start;
+      -ms-flex-pack: start;
+          justify-content: flex-start;
+  -webkit-box-align: start;
+      -ms-flex-align: start;
+          align-items: flex-start;
+}
+
+#bank-title-main {
+  font-size: 3rem;
 }
 /*# sourceMappingURL=style.css.map */

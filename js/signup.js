@@ -57,3 +57,29 @@ submitBtn.addEventListener('click', (e) => {
   })
   location.href = '/html/login.html'
 })
+
+const showPassBtn = document.querySelector('#show-password')
+const hidePassBtn = document.querySelector('#hide-password')
+
+const showPassword = (e) => {
+  e.preventDefault()
+  let password = document.querySelector('#password')
+  if (password.type === 'password') {
+    hidePassBtn.classList.remove('invisible')
+    showPassBtn.classList.add('invisible')
+    password.type = 'text'
+  } else {
+    password.type === 'password'
+  }
+}
+
+const hidePassword = (e) => {
+  e.preventDefault()
+  let password = document.querySelector('#password')
+  hidePassBtn.classList.add('invisible')
+  showPassBtn.classList.remove('invisible')
+  password.type = 'password'
+}
+
+showPassBtn.addEventListener('click', showPassword)
+hidePassBtn.addEventListener('click', hidePassword)

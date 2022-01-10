@@ -37,27 +37,28 @@ form.addEventListener('submit', (e) => {
 
 submitBtn.addEventListener('click', handleLogin)
 
-// const userName = 'berrycake'
+const showPassBtn = document.querySelector('#show-password')
+const hidePassBtn = document.querySelector('#hide-password')
 
-// export const loadAvatar = () => {
-//   console.log('Hello')
-//   const avatarHolder = document.querySelector('#avatar')
-//   avatarHolder.src = 'https://avatars.dicebear.com/api/bottts/hello.svg'
-// }
+const showPassword = (e) => {
+  e.preventDefault()
+  let password = document.querySelector('#password')
+  if (password.type === 'password') {
+    hidePassBtn.classList.remove('invisible')
+    showPassBtn.classList.add('invisible')
+    password.type = 'text'
+  } else {
+    password.type === 'password'
+  }
+}
 
-// loadAvatar()
-// export const submitBtn = document.querySelector('#submitBtn')
-// export const submitForm = () => {
-//   console.log('ok')
-//   Email.send({
-//     Host: 'smtp.elasticemail.com',
-//     Username: 'jellybellycake@gmail.com',
-//     Password: '6E2DD4EBDC7CA706514B9CB6A5F47019E19B',
-//     To: 'nebab.johncarl@gmail.com',
-//     From: 'jellybellycake@gmail.com',
-//     Subject: 'This is the subject',
-//     Body: 'And this is the body',
-//   }).then((message) => alert(message))
-// }
+const hidePassword = (e) => {
+  e.preventDefault()
+  let password = document.querySelector('#password')
+  hidePassBtn.classList.add('invisible')
+  showPassBtn.classList.remove('invisible')
+  password.type = 'password'
+}
 
-// submitBtn.addEventListener('click', submitForm)
+showPassBtn.addEventListener('click', showPassword)
+hidePassBtn.addEventListener('click', hidePassword)
