@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login</title>
+    <link
+      rel="stylesheet"
+      href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css"
+    />
+    <link rel="stylesheet" href="../styles/style.css" />
+  </head>
+  <body>
+    <nav>
+      <div></div>
+      <div>
+        <img src="../assets/onionbankmerged.png" /><a href="../index.html"
+          >Onion Bank</a
+        >
+      </div>
+      <div id="nav-page-button-container">
+        <button onclick="document.location='./login.html'">login</button>
+        <button onclick="document.location='./signup.html'">
+          create an account
+        </button>
+      </div>
+    </nav>
+    <main class="page-container">
+      <section class="form-section" id="login-section">
+        <!-- <div class="title-container">
+                <img src="../assets/onionbankmerged.png" >
+                <h1 id="bank-title">Onion Bank</h1>
+            </div> -->
+        <div class="form-container" id="login-form-container">
+          <a href="#" id="login-email-link">Login with email</a>
+          <form class="form">
+            <div class="login-fields-container">
+              <i class="far fa-envelope"></i>
+              <input
+                type="text"
+                class="login-field"
+                id="email"
+                name="email"
+                placeholder="Email"
+                required
+              />
+            </div>
+            <div class="login-fields-container">
+              <i class="far fa-lock"></i>
+              <input
+                type="password"
+                class="login-field"
+                id="password"
+                name="password"
+                placeholder="Password"
+                required
+              />
+              <button id="show-password">Show</button>
+              <button id="hide-password" class="invisible">Hide</button>
+            </div>
+            <div class="login-fields-container">
+              <input type="submit" value="LOGIN" id="submit-login-button" />
+            </div>
+            <!-- <button
+              onclick="document.location='./admin.html'"
+              id="forgot-password-link"
+            >
+              Admin Login
+            </button> -->
+            <button
+              onclick="document.location='./signup.html'"
+              id="sign-up-link"
+            >
+              Don't have an account? Sign Up
+            </button>
+          </form>
+        </div>
+        <div id="disclaimer">
+          <p>
+            Onion Bank of the Philippines is regulated by the Bangko Sentral ng
+            Pilipinas. For inquiries and comments, please contact our 24-Hour
+            Customer Service. A proud member of BancNet and PDIC. Deposits are
+            insured by PDIC up to PHP 500,000 per depositor.
+          </p>
+        </div>
+      </section>
+      <section class="visual-section">
+        <div class="visual-section-container">
+          <img src="../assets/visual-signup.png" id="visual-image" />
+        </div>
+      </section>
+    </main>
+    <script type="module" src="../js/login.js"></script>
+  </body>
+</html>

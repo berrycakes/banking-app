@@ -1,0 +1,257 @@
+#greeting,
+h3 {
+  display: flex;
+  align-items: center;
+  font-size: 1.5rem;
+}
+
+.balance-container,
+.income-container,
+.expense-container {
+  text-align: right;
+  margin: 10px;
+  padding: 20px;
+  background-color: rgba(255, 255, 255, 0.5);
+  border-radius: 8%;
+}
+#account-balance-container {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-top: 5px;
+}
+#account-balance-label {
+  margin: 0;
+  padding: 0;
+  font-size: 1rem;
+}
+#account-name-container {
+  text-transform: uppercase;
+  margin-bottom: 35px;
+}
+
+.dashboard {
+  display: flex;
+}
+
+.dashboard-nav {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  position: fixed;
+  overflow: auto;
+
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  box-shadow: 0 8px 32px 0 rgba(78, 64, 64, 0.37);
+  background-image: linear-gradient(
+    155deg,
+    rgba(255, 255, 255, 0.72),
+    rgba(255, 255, 255, 0)
+  );
+  border-radius: 10px;
+  border-top: 2px solid rgba(255, 255, 255, 1);
+  border-left: 2px solid rgba(255, 255, 255, 1);
+  background-color: rgba(255, 255, 255, 0.5);
+  width: 20vw;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  & div {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 20px 0;
+    & img {
+      height: 40px;
+    }
+  }
+  & a {
+    color: inherit;
+  }
+}
+
+.nav-option {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  font-size: 1.5rem;
+  color: inherit;
+  font-family: $sans;
+  &:active {
+    background-color: $bg-color;
+    color: white;
+  }
+  &:hover:not(.active) {
+    background-color: $gray;
+    opacity: 0.7;
+    color: white;
+  }
+}
+
+#user-name {
+  font-weight: 700;
+}
+
+#account-name-container {
+  text-align: left;
+}
+
+#avatar {
+  height: 60px;
+  width: 60px;
+  position: relative;
+  left: 5px;
+}
+
+.dashboard-main {
+  padding: 20px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  margin-left: 20vw;
+}
+
+#dashboard-cards {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  & section {
+    background-color: rgba(255, 255, 255, 0.2);
+    padding: 20px;
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
+    box-shadow: 0 8px 16px 0 rgba(78, 64, 64, 0.37);
+    background-image: linear-gradient(
+      155deg,
+      rgba(255, 255, 255, 0.72),
+      rgba(255, 255, 255, 0)
+    );
+    border-radius: 10px;
+    border-top: 2px solid rgba(255, 255, 255, 1);
+    border-left: 2px solid rgba(255, 255, 255, 1);
+  }
+}
+
+#activities {
+  width: 100%;
+  text-align: center;
+}
+
+#activity-container {
+  width: 1fr;
+  margin: 15px;
+  background-color: rgba(255, 255, 255, 0.5);
+  padding: 20px;
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+  box-shadow: 0 8px 16px 0 rgba(78, 64, 64, 0.37);
+  background-image: linear-gradient(
+    155deg,
+    rgba(255, 255, 255, 0.72),
+    rgba(255, 255, 255, 0)
+  );
+  border-radius: 10px;
+  border-top: 2px solid rgba(255, 255, 255, 1);
+  border-left: 2px solid rgba(255, 255, 255, 1);
+}
+
+#transaction-container {
+  align-self: center;
+  width: 500px;
+  margin: 30px;
+  background-color: rgba(255, 255, 255, 0.5);
+  padding: 30px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+  box-shadow: 0 8px 16px 0 rgba(78, 64, 64, 0.37);
+  background-image: linear-gradient(
+    155deg,
+    rgba(255, 255, 255, 0.72),
+    rgba(255, 255, 255, 0)
+  );
+  border-radius: 10px;
+  border-top: 2px solid rgba(255, 255, 255, 1);
+  border-left: 2px solid rgba(255, 255, 255, 1);
+  & form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+#add-transaction-btn,
+#submit-deposit-btn,
+#submit-transfer-btn,
+#submit-payment-btn {
+  margin-top: 0;
+  margin: 10px;
+  display: inline-block;
+  padding: 12px 16px;
+  border: 0;
+  text-decoration: none;
+  border-radius: 15px;
+  background-color: rgba(255, 255, 255, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(30px);
+  box-shadow: 0 2px 4px 0 rgba(78, 64, 64, 0.37);
+  color: $purple;
+  font-size: 1rem;
+  letter-spacing: 2px;
+  cursor: pointer;
+  text-transform: uppercase;
+
+  &:hover {
+    background-color: rgba(144, 51, 197, 0.2);
+    transition: all ease 0.8s;
+  }
+}
+
+#transaction-type,
+#deposit-amount,
+#recipient,
+#biller,
+#transfer-amount,
+#payment-amount {
+  display: flex;
+  align-items: center;
+  height: 60px;
+  width: 400px;
+  border-radius: 10px;
+  background-color: $bg-color;
+  margin: 5px 30px;
+  border: none;
+  font-size: inherit;
+  font-family: inherit;
+  color: inherit;
+  padding-left: 20px;
+}
+
+select {
+  border: none;
+  font-size: inherit;
+  font-family: inherit;
+  color: inherit;
+  padding-left: 20px;
+}
+
+td {
+  font-size: 1rem;
+}
+
+#amount-column {
+  text-align: right;
+  padding-right: 80px;
+}
+
+.transfer::before,
+.payment::before {
+  content: '—₱ ' !important;
+}
