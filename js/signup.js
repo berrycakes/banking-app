@@ -35,6 +35,7 @@ submitBtn.addEventListener('click', (e) => {
   const db = request.result
   const transaction = db.transaction('accounts', 'readwrite')
   const store = transaction.objectStore('accounts')
+
   const firstNameIndex = store.index('firstName')
   const middleNameIndex = store.index('middleName')
   const lastNameIndex = store.index('lastName')
@@ -55,6 +56,7 @@ submitBtn.addEventListener('click', (e) => {
     password: pword,
     balance: 0,
   })
+  alert('Created Account Successfully')
   location.href = '/html/login.html'
 })
 

@@ -39,29 +39,29 @@
         <section class="income-container">
             <div><h3>Income</h3></div>
             <div><p id="account-income-container" class="currency">- -</p></div>
-            <div><button id="add-transaction-btn">Add Income</button></div>
+            <div><button id="add-income-btn">Add Income</button></div>
             
         </section>
 
         
     </div>
-    <section id="transaction-container" class="invisible">
+    <div id="transaction-modal" class="modal invisible">
+    <section id="transaction-container" >
             <select name="type" id="transaction-type">
                 <option value="">type of transaction</option>
-                <option value="deposit">Deposit</option>
                 <option value="transfer">Transfer</option>
                 <option value="payment">Pay Bills</option>
             </select>
 
             <form id="deposit-form" class="invisible">
-                <input type="text" name="deposit-amount" id="deposit-amount" placeholder="amount deposit self" required>
+                <input type="number" min="0" name="deposit-amount" id="deposit-amount" placeholder="Amount to be deposited to this account" required>
                 <button id="submit-deposit-btn"> Confirm Transaction</button>
             </form>
 
             <form id="transfer-form" class="invisible">
-                <input type="email" name="recipient" id="recipient"  placeholder="recepient's email address" required>
+                <input type="email" step=".01" min="0" name="recipient" id="recipient"  placeholder="recepient's email address" required>
                 <p id="available-balance"></p>
-                <input type="text" name="transfer-amount" id="transfer-amount" placeholder="amount" required>
+                <input type="number" name="transfer-amount" id="transfer-amount" placeholder="amount" required>
                 <button id="submit-transfer-btn"> Confirm Transaction</button>
             </form>
 
@@ -71,10 +71,11 @@
                     <option value="meralco">Meralco</option>
                     <option value="pldt">PLDT</option>
                 </select>
-                <input type="text" name="payment-amount" id="payment-amount" placeholder="amount" required>
+                <input type="number" step=".01" min="0" name="payment-amount" id="payment-amount" placeholder="amount" required>
                 <button id="submit-payment-btn"> Confirm Transaction</button>
             </form>
     </section>
+    </div>
     <section id="activity-container">
         <h2>Income and Expense Flow</h2>
         <div><canvas id="myChart" width="300" height="100"></canvas></div>
@@ -82,7 +83,7 @@
     <section id="activity-container">
         <h2>Activities</h2>
         <table id='activities'>
-            <tr>
+            <tr id="table-header">
                 <th>date and time</th>
                 <th>transaction type</th>
                 <th>recipient</th>

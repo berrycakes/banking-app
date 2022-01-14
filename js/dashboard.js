@@ -41,6 +41,21 @@ const fetchAvatar = () => {
 
 const displayTransactions = () => {
   const request = indexedDB.open('TransactionsDatabase', 1)
+  request.onupgradeneeded = () => {
+    const db = request.result
+    const store = db.createObjectStore('transactions', {
+      keypath: 'id',
+      autoincrement: true,
+    })
+    store.createIndex('type', ['type'], { unique: false })
+    store.createIndex('timestamp', ['timestamp'], { unique: true })
+    store.createIndex('emailAddress', ['emailAddress'], { unique: false })
+    store.createIndex('recipientAddress', ['recipientAddress'], {
+      unique: false,
+    })
+    store.createIndex('amount', ['amount'], { unique: false })
+  }
+
   request.onsuccess = () => {
     const db = request.result
     const transaction = db.transaction('transactions', 'readwrite')
@@ -117,6 +132,7 @@ const displayTransactions = () => {
       transaction.oncomplete = () => db.close()
     }
   }
+  request.onerror = () => console.log('error tx db')
 }
 
 // CHOOSE TRANSACTION
@@ -126,12 +142,8 @@ const formDeposit = document.querySelector('#deposit-form')
 const formPayment = document.querySelector('#payment-form')
 
 const selectTransactionType = (event) => {
+  document.querySelector('#transaction-type').classList.remove('invisible')
   let value = event.target.value
-  if (value === 'deposit') {
-    formDeposit.classList.remove('invisible')
-    formTransfer.classList.add('invisible')
-    formPayment.classList.add('invisible')
-  }
   if (value === 'transfer') {
     formDeposit.classList.add('invisible')
     formTransfer.classList.remove('invisible')
@@ -142,6 +154,14 @@ const selectTransactionType = (event) => {
     formTransfer.classList.add('invisible')
     formPayment.classList.remove('invisible')
   }
+}
+
+const addIncome = () => {
+  document.querySelector('#transaction-type').classList.toggle('invisible')
+  document.querySelector('#transaction-modal').classList.remove('invisible')
+  formDeposit.classList.remove('invisible')
+  formTransfer.classList.add('invisible')
+  formPayment.classList.add('invisible')
 }
 
 transactionTypeSelector.addEventListener('change', selectTransactionType)
@@ -205,6 +225,8 @@ const addDepositTransaction = () => {
       }
     }
   }
+  modal.classList.add('invisible')
+  alert('transaction successful')
 }
 
 const addTransferTransaction = () => {
@@ -287,6 +309,8 @@ const addTransferTransaction = () => {
       }
     }
   }
+  modal.classList.add('invisible')
+  alert('transaction successful')
 }
 
 const addPaymentTransaction = () => {
@@ -351,10 +375,12 @@ const addPaymentTransaction = () => {
       }
     }
   }
+  modal.classList.add('invisible')
+  alert('transaction successful')
 }
 
 const showTransactionContainer = () => {
-  document.querySelector('#transaction-container').classList.remove('invisible')
+  document.querySelector('#transaction-modal').classList.remove('invisible')
 }
 
 formDeposit.addEventListener('submit', (e) => {
@@ -368,12 +394,14 @@ formPayment.addEventListener('submit', (e) => {
 })
 
 // TODO: Submit Transactions
-const newTransactionBtn = document.querySelector('#add-transaction-btn')
+const addExpenseBtn = document.querySelector('#add-transaction-btn')
+const addIncomeBtn = document.querySelector('#add-income-btn')
 const submitDepositBtn = document.querySelector('#submit-deposit-btn')
 const submitTransferBtn = document.querySelector('#submit-transfer-btn')
 const submitPaymentBtn = document.querySelector('#submit-payment-btn')
 
-newTransactionBtn.addEventListener('click', showTransactionContainer)
+addExpenseBtn.addEventListener('click', showTransactionContainer)
+addIncomeBtn.addEventListener('click', addIncome)
 submitDepositBtn.addEventListener('click', addDepositTransaction)
 submitTransferBtn.addEventListener('click', addTransferTransaction)
 submitPaymentBtn.addEventListener('click', addPaymentTransaction)
@@ -384,6 +412,14 @@ const handleLogout = () => {
   document.location = '../index.html'
 }
 logoutBtn.addEventListener('click', handleLogout)
+
+const modal = document.querySelector('#transaction-modal')
+window.onclick = (event) => {
+  if (event.target == modal) {
+    modal.classList.add('invisible')
+    document.location = './dashboard.html'
+  }
+}
 
 // TODO: 1. Sort table
 // 2. query TX for expense tracker
