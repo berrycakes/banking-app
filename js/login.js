@@ -22,7 +22,7 @@ const handleLogin = (e) => {
     if (emailQuery.result.password === pword) {
       sessionStorage.setItem('user', emailAd)
 
-      location.href = '/html/dashboard.html'
+      location.href = 'banking-app/html/dashboard.html'
     } else {
       alert('wrong password')
     }

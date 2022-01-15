@@ -57,7 +57,7 @@ submitBtn.addEventListener('click', (e) => {
     balance: 0,
   })
   alert('Created Account Successfully')
-  location.href = '/html/login.html'
+  location.href = 'banking-app/html/login.html'
 })
 
 const showPassBtn = document.querySelector('#show-password')
