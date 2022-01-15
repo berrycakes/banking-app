@@ -6,6 +6,7 @@ onload = () => {
 
 const user = sessionStorage.getItem('user')
 const indexedDB = window.indexedDB
+let transactionKey = 1
 
 const displayUser = () => {
   const request = indexedDB.open('AccountsDatabase', 1)
@@ -42,13 +43,14 @@ const fetchAvatar = () => {
 const displayTransactions = () => {
   const request = indexedDB.open('TransactionsDatabase', 1)
   request.onupgradeneeded = () => {
+    console.log('loaded')
     const db = request.result
     const store = db.createObjectStore('transactions', {
       keypath: 'id',
       autoincrement: true,
     })
     store.createIndex('type', ['type'], { unique: false })
-    store.createIndex('timestamp', ['timestamp'], { unique: true })
+    store.createIndex('timestamp', ['timestamp'], { unique: false })
     store.createIndex('emailAddress', ['emailAddress'], { unique: false })
     store.createIndex('recipientAddress', ['recipientAddress'], {
       unique: false,
@@ -177,7 +179,7 @@ const addDepositTransaction = () => {
       autoincrement: true,
     })
     store.createIndex('type', ['type'], { unique: false })
-    store.createIndex('timestamp', ['timestamp'], { unique: true })
+    store.createIndex('timestamp', ['timestamp'], { unique: false })
     store.createIndex('emailAddress', ['emailAddress'], { unique: false })
     store.createIndex('recipientAddress', ['recipientAddress'], {
       unique: false,
@@ -190,16 +192,20 @@ const addDepositTransaction = () => {
     const transaction = db.transaction('transactions', 'readwrite')
     const store = transaction.objectStore('transactions')
 
-    store.put({
-      timestamp: new Date(),
-      emailAddress: user,
-      amount: amount,
-      type: transactionTypeSelector.value,
-      recipientAddress: 'cash-in',
-    })
+    store.put(
+      {
+        timestamp: new Date(),
+        emailAddress: user,
+        amount: amount,
+        type: 'deposit',
+        recipientAddress: 'cash-in',
+      },
+      transactionKey
+    )
     transaction.oncomplete = () => {
       console.log('added transaction')
       db.close()
+      transactionKey++
     }
   }
 
@@ -231,9 +237,7 @@ const addDepositTransaction = () => {
 
 const addTransferTransaction = () => {
   let recipientAddress = document.querySelector('#recipient').value
-  let amount = parseFloat(
-    document.querySelector('#transfer-amount').value
-  ).toFixed(2)
+  let amount = parseFloat(document.querySelector('#transfer-amount').value)
   const request = indexedDB.open('TransactionsDatabase', 1)
 
   request.onupgradeneeded = () => {
@@ -256,16 +260,20 @@ const addTransferTransaction = () => {
     const transaction = db.transaction('transactions', 'readwrite')
     const store = transaction.objectStore('transactions')
 
-    store.put({
-      timestamp: new Date(),
-      emailAddress: user,
-      recipientAddress: recipientAddress,
-      amount: amount,
-      type: transactionTypeSelector.value,
-    })
+    store.put(
+      {
+        timestamp: new Date(),
+        emailAddress: user,
+        recipientAddress: recipientAddress,
+        amount: amount,
+        type: 'transfer',
+      },
+      transactionKey
+    )
     transaction.oncomplete = () => {
       console.log('added transaction')
       db.close()
+      transactionKey++
     }
   }
 
@@ -314,9 +322,7 @@ const addTransferTransaction = () => {
 }
 
 const addPaymentTransaction = () => {
-  let amount = parseFloat(
-    document.querySelector('#payment-amount').value
-  ).toFixed(2)
+  let amount = parseFloat(document.querySelector('#payment-amount').value)
   const request = indexedDB.open('TransactionsDatabase', 1)
   const biller = document.querySelector('#biller').value
 
@@ -340,16 +346,20 @@ const addPaymentTransaction = () => {
     const transaction = db.transaction('transactions', 'readwrite')
     const store = transaction.objectStore('transactions')
 
-    store.put({
-      timestamp: new Date(),
-      emailAddress: user,
-      recipientAddress: biller,
-      amount: amount,
-      type: transactionTypeSelector.value,
-    })
+    store.put(
+      {
+        timestamp: new Date(),
+        emailAddress: user,
+        recipientAddress: biller,
+        amount: amount,
+        type: 'payment',
+      },
+      transactionKey
+    )
     transaction.oncomplete = () => {
       console.log('added transaction')
       db.close()
+      transactionKey++
     }
   }
 
