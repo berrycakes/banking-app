@@ -26,7 +26,10 @@ const displayUser = () => {
         '#user-name'
       ).innerText = `Hello, ${account.firstName}`
       document.querySelector('#account-balance-container').innerHTML =
-        parseFloat(account.balance).toFixed(2)
+        parseFloat(account.balance).toLocaleString(undefined, {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        })
       document.querySelector(
         '#account-name-container'
       ).innerHTML = `${account.firstName} ${account.lastName}`
@@ -43,7 +46,6 @@ const fetchAvatar = () => {
 const displayTransactions = () => {
   const request = indexedDB.open('TransactionsDatabase', 1)
   request.onupgradeneeded = () => {
-    console.log('loaded')
     const db = request.result
     const store = db.createObjectStore('transactions', {
       keypath: 'id',
@@ -84,7 +86,10 @@ const displayTransactions = () => {
                           element.type
                         }" id="amount-column">${parseFloat(
           element.amount
-        ).toFixed(2)}</td>`
+        ).toLocaleString(undefined, {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        })}</td>`
         if (element.type === 'deposit') {
           depositsAmount += parseFloat(element.amount)
         }
@@ -97,9 +102,15 @@ const displayTransactions = () => {
         console.log(depositsAmount)
       })
       document.querySelector('#account-income-container').innerHTML =
-        parseFloat(depositsAmount).toFixed(2)
+        parseFloat(depositsAmount).toLocaleString(undefined, {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        })
       document.querySelector('#account-expense-container').innerHTML =
-        parseFloat(transfersAmount + paymentsAmount).toFixed(2)
+        parseFloat(transfersAmount + paymentsAmount).toLocaleString(undefined, {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        })
       const ctx = document.getElementById('myChart').getContext('2d')
       const myChart = new Chart(ctx, {
         type: 'bar',
@@ -174,17 +185,19 @@ const addDepositTransaction = () => {
 
   request.onupgradeneeded = () => {
     const db = request.result
-    const store = db.createObjectStore('transactions', {
-      keypath: 'id',
-      autoincrement: true,
-    })
-    store.createIndex('type', ['type'], { unique: false })
-    store.createIndex('timestamp', ['timestamp'], { unique: false })
-    store.createIndex('emailAddress', ['emailAddress'], { unique: false })
-    store.createIndex('recipientAddress', ['recipientAddress'], {
-      unique: false,
-    })
-    store.createIndex('amount', ['amount'], { unique: false })
+    if (!db.objectStoreNames.contains('transactions')) {
+      const store = db.createObjectStore('transactions', {
+        keypath: 'id',
+        autoIncrement: true,
+      })
+      store.createIndex('type', ['type'], { unique: false })
+      store.createIndex('timestamp', ['timestamp'], { unique: false })
+      store.createIndex('emailAddress', ['emailAddress'], { unique: false })
+      store.createIndex('recipientAddress', ['recipientAddress'], {
+        unique: false,
+      })
+      store.createIndex('amount', ['amount'], { unique: false })
+    }
   }
 
   request.onsuccess = () => {
@@ -192,20 +205,16 @@ const addDepositTransaction = () => {
     const transaction = db.transaction('transactions', 'readwrite')
     const store = transaction.objectStore('transactions')
 
-    store.put(
-      {
-        timestamp: new Date(),
-        emailAddress: user,
-        amount: amount,
-        type: 'deposit',
-        recipientAddress: 'cash-in',
-      },
-      transactionKey
-    )
+    store.put({
+      timestamp: new Date(),
+      emailAddress: user,
+      amount: amount,
+      type: 'deposit',
+      recipientAddress: 'cash-in',
+    })
     transaction.oncomplete = () => {
       console.log('added transaction')
       db.close()
-      transactionKey++
     }
   }
 
@@ -226,7 +235,10 @@ const addDepositTransaction = () => {
         const requestUpdate = store.put(depositorData, depositorKey.result)
         requestUpdate.onsuccess = () => {
           document.querySelector('#account-balance-container').innerText =
-            depositorData.balance.toFixed(2)
+            depositorData.balance.toLocaleString(undefined, {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2,
+            })
         }
       }
     }
@@ -295,7 +307,10 @@ const addTransferTransaction = () => {
         const requestUpdateSender = store.put(senderData, senderKey.result)
         requestUpdateSender.onsuccess = () => {
           document.querySelector('#account-balance-container').innerText =
-            parseFloat(senderData.balance).toFixed(2)
+            parseFloat(senderData.balance).toLocaleString(undefined, {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2,
+            })
         }
       }
     }
@@ -380,7 +395,10 @@ const addPaymentTransaction = () => {
         const requestUpdate = store.put(payorData, payorKey.result)
         requestUpdate.onsuccess = () => {
           document.querySelector('#account-balance-container').innerText =
-            parseFloat(payorData.balance).toFixed(2)
+            parseFloat(payorData.balance).toLocaleString(undefined, {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2,
+            })
         }
       }
     }

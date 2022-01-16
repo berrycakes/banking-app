@@ -1,5 +1,5 @@
 onload = () => {
-  displayUser()
+  displayAccounts()
   fetchAvatar()
   displayTransactions()
 }
@@ -7,87 +7,211 @@ onload = () => {
 const user = sessionStorage.getItem('user')
 const indexedDB = window.indexedDB
 
-// const displayUser = () => {
-//   const request = indexedDB.open('AccountsDatabase', 1)
-//   request.onsuccess = () => {
-//     const db = request.result
-//     const transaction = db.transaction('accounts', 'readwrite')
-//     const store = transaction.objectStore('accounts')
-
-//     const emailAddress = store.index('emailAddress')
-
-//     const emailQuery = emailAddress.get([user])
-
-//     emailQuery.onerror = () => console.log('cannot fetch account data')
-//     emailQuery.onsuccess = () => {
-//       const account = emailQuery.result
-//       document.querySelector(
-//         '#user-name'
-//       ).innerText = `Hello, ${account.firstName}`
-//       document.querySelector('#account-balance-container').innerHTML =
-//         parseFloat(account.balance).toFixed(2)
-//       document.querySelector(
-//         '#account-name-container'
-//       ).innerHTML = `${account.firstName} ${account.lastName}`
-//     }
-//     transaction.oncomplete = () => db.close()
-//   }
-// }
+const displayAccounts = () => {
+  const request = indexedDB.open('AccountsDatabase', 1)
+  request.onsuccess = () => {
+    const db = request.result
+    const transaction = db.transaction('accounts', 'readwrite')
+    const store = transaction.objectStore('accounts')
+    const emailQuery = store.index('emailAddress').getAll()
+    emailQuery.onerror = () => console.log('cannot fetch account data')
+    emailQuery.onsuccess = () => {
+      const accounts = emailQuery.result
+      document.querySelector('#account-summary').innerHTML =
+        Object.keys(accounts).length
+      document.querySelector('#account-balance-container').innerHTML = accounts
+        .reduce((a, b) => parseFloat(a) + parseFloat(b.balance), 0)
+        .toLocaleString(undefined, {
+          maximumFractionDigits: 2,
+          minimumFractionDigits: 2,
+        })
+      accounts.forEach((element, i) => {
+        const accountsSummary = document.querySelector('#accounts-summary')
+        let tr = document.createElement('tr')
+        accountsSummary.appendChild(tr)
+        tr.innerHTML = `<td>${i + 1}</td>
+                        <td>${element.emailAddress}</td>
+                        <td>${element.lastName}</td>
+                        <td>${element.firstName}</td>
+                        <td>${element.middleName}</td>
+                        <td class="currency" id="amount-column">${parseFloat(
+                          element.balance
+                        ).toLocaleString(undefined, {
+                          minimumFractionDigits: 2,
+                          maximumFractionDigits: 2,
+                        })}</td>`
+      })
+      transaction.oncomplete = () => db.close()
+    }
+  }
+}
 
 const fetchAvatar = () => {
-  let url = `https://avatars.dicebear.com/api/big-smile/admin.svg?`
-  document.querySelector('#avatar').src = url
+  // let url = `https://avatars.dicebear.com/api/big-smile/${user}.svg?`
+  // document.querySelector('#avatar').src = url
 }
 
 const displayTransactions = () => {
   const request = indexedDB.open('TransactionsDatabase', 1)
+  request.onupgradeneeded = () => {
+    if (!db.objectStoreNames.contains('transactions')) {
+      const db = request.result
+      const store = db.createObjectStore('transactions', {
+        keypath: 'id',
+        autoincrement: true,
+      })
+      store.createIndex('type', ['type'], { unique: false })
+      store.createIndex('timestamp', ['timestamp'], { unique: false })
+      store.createIndex('emailAddress', ['emailAddress'], { unique: false })
+      store.createIndex('recipientAddress', ['recipientAddress'], {
+        unique: false,
+      })
+      store.createIndex('amount', ['amount'], { unique: false })
+    }
+  }
+
   request.onsuccess = () => {
     const db = request.result
     const transaction = db.transaction('transactions', 'readwrite')
     const store = transaction.objectStore('transactions')
-
-    const emailAddress = store.index('emailAddress')
-
-    const emailQuery = emailAddress.getAll()
+    const emailQuery = store.index('amount').getAll()
 
     emailQuery.onerror = () => console.log('cannot fetch account data')
     emailQuery.onsuccess = () => {
-      emailQuery.result.forEach((element) => {
+      // let depositsAmount = 0
+      // let withdrawAmount = 0
+      // let balance = depositsAmount - withdrawAmount
+      let monthlyBalance = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+      const transactions = emailQuery.result
+      document.querySelector('#transaction-summary').innerHTML =
+        Object.keys(transactions).length
+
+      transactions.reverse().forEach((element) => {
         const activities = document.querySelector('#activities')
         let tr = document.createElement('tr')
         activities.appendChild(tr)
         const newTimestamp = new Date(element.timestamp)
-        tr.innerHTML = `<td>${newTimestamp.toUTCString().substring(4)} </td>
-                          <td>${element.type}</td>
-                          <td>${element.recipientAddress}</td>
-                          <td class="currency ${
-                            element.type
-                          }" id="amount-column">${parseFloat(
+        tr.innerHTML = `<td>${newTimestamp
+          .toUTCString()
+          .substring(4)
+          .replace('GMT', '')} </td>
+                        <td>${element.emailAddress}</td>
+                        <td>${element.type}</td>
+                        <td>${element.recipientAddress}</td>
+                        <td class="currency ${
+                          element.type
+                        }" id="amount-column">${parseFloat(
           element.amount
-        ).toFixed(2)}</td>`
+        ).toLocaleString(undefined, {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        })}</td>`
+
+        const date = element.timestamp.getMonth()
+        if (element.type === 'deposit') {
+          monthlyBalance[date] += parseFloat(element.amount)
+        }
+        if (element.type === ('withdraw' || 'payment')) {
+          monthlyBalance[date] -= parseFloat(element.amount)
+        }
       })
+      console.log(monthlyBalance)
+      const ctx = document.getElementById('myChart').getContext('2d')
+      const myChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: ['Aug', 'Sep', 'Oct', 'Nov', 'Dec', 'Jan'],
+          datasets: [
+            {
+              label: ['Total Balance in PhP'],
+              data: [
+                monthlyBalance[7],
+                monthlyBalance[8],
+                monthlyBalance[9],
+                monthlyBalance[10],
+                monthlyBalance[11],
+                monthlyBalance[0],
+              ],
+              fill: false,
+              borderColor: ['rgba(129, 140, 248, 0.5)'],
+              tension: 0.2,
+            },
+          ],
+        },
+        options: {
+          plugins: {
+            legend: {
+              display: false,
+            },
+          },
+          scales: {
+            y: {
+              ticks: {
+                // Include a dollar sign in the ticks
+                callback: function (value, index, ticks) {
+                  return '₱' + value
+                },
+              },
+            },
+          },
+        },
+      })
+      transaction.oncomplete = () => db.close()
     }
-    transaction.oncomplete = () => db.close()
+  }
+  request.onerror = () => console.log('error tx db')
+}
+
+// CHOOSE TRANSACTION
+const transactionTypeSelector = document.querySelector('#transaction-type')
+const formTransfer = document.querySelector('#transfer-form')
+const formDeposit = document.querySelector('#deposit-form')
+
+const selectTransactionType = (event) => {
+  document.querySelector('#transaction-type').classList.remove('invisible')
+  let value = event.target.value
+  if (value === 'transfer') {
+    formDeposit.classList.add('invisible')
+    formTransfer.classList.remove('invisible')
+  }
+  if (value === 'deposit') {
+    formDeposit.classList.remove('invisible')
+    formTransfer.classList.add('invisible')
   }
 }
 
+// const addIncome = () => {
+//   document.querySelector('#transaction-type').classList.toggle('invisible')
+//   document.querySelector('#transaction-modal').classList.remove('invisible')
+//   formDeposit.classList.remove('invisible')
+//   formTransfer.classList.add('invisible')
+//   formPayment.classList.add('invisible')
+// }
+
+transactionTypeSelector.addEventListener('change', selectTransactionType)
+
 const addDepositTransaction = () => {
+  let depositDate = document.querySelector('#deposit-date').value
   let amount = parseFloat(document.querySelector('#deposit-amount').value)
+  let depositee = document.querySelector('#depositee').value
+
   const request = indexedDB.open('TransactionsDatabase', 1)
 
   request.onupgradeneeded = () => {
     const db = request.result
-    const store = db.createObjectStore('transactions', {
-      keypath: 'id',
-      autoincrement: true,
-    })
-    store.createIndex('type', ['type'], { unique: false })
-    store.createIndex('timestamp', ['timestamp'], { unique: true })
-    store.createIndex('emailAddress', ['emailAddress'], { unique: false })
-    store.createIndex('recipientAddress', ['recipientAddress'], {
-      unique: false,
-    })
-    store.createIndex('amount', ['amount'], { unique: false })
+    if (!db.objectStoreNames.contains('transactions')) {
+      const store = db.createObjectStore('transactions', {
+        keypath: 'id',
+        autoIncrement: true,
+      })
+      store.createIndex('type', ['type'], { unique: false })
+      store.createIndex('timestamp', ['timestamp'], { unique: false })
+      store.createIndex('emailAddress', ['emailAddress'], { unique: false })
+      store.createIndex('recipientAddress', ['recipientAddress'], {
+        unique: false,
+      })
+      store.createIndex('amount', ['amount'], { unique: false })
+    }
   }
 
   request.onsuccess = () => {
@@ -96,10 +220,10 @@ const addDepositTransaction = () => {
     const store = transaction.objectStore('transactions')
 
     store.put({
-      timestamp: new Date(),
-      emailAddress: user,
+      timestamp: new Date(depositDate),
+      emailAddress: depositee,
       amount: amount,
-      type: transactionTypeSelector.value,
+      type: 'deposit',
       recipientAddress: 'cash-in',
     })
     transaction.oncomplete = () => {
@@ -116,27 +240,24 @@ const addDepositTransaction = () => {
 
     const emailAddress = store.index('emailAddress')
 
-    const depositorKey = emailAddress.getKey([user])
+    const depositorKey = emailAddress.getKey([depositee])
     depositorKey.onsuccess = () => {
       const depositorQuery = store.get(depositorKey.result)
       depositorQuery.onsuccess = () => {
         const depositorData = depositorQuery.result
         depositorData.balance += amount
         const requestUpdate = store.put(depositorData, depositorKey.result)
-        requestUpdate.onsuccess = () => {
-          document.querySelector('#account-balance-container').innerText =
-            depositorData.balance.toFixed(2)
-        }
+        requestUpdate.onsuccess = () => console.log('updated account balance')
       }
     }
   }
+  transactionModal.classList.add('invisible')
+  alert('transaction successful')
 }
 
 const addTransferTransaction = () => {
   let recipientAddress = document.querySelector('#recipient').value
-  let amount = parseFloat(
-    document.querySelector('#transfer-amount').value
-  ).toFixed(2)
+  let amount = parseFloat(document.querySelector('#transfer-amount').value)
   const request = indexedDB.open('TransactionsDatabase', 1)
 
   request.onupgradeneeded = () => {
@@ -164,7 +285,7 @@ const addTransferTransaction = () => {
       emailAddress: user,
       recipientAddress: recipientAddress,
       amount: amount,
-      type: transactionTypeSelector.value,
+      type: 'transfer',
     })
     transaction.oncomplete = () => {
       console.log('added transaction')
@@ -190,7 +311,10 @@ const addTransferTransaction = () => {
         const requestUpdateSender = store.put(senderData, senderKey.result)
         requestUpdateSender.onsuccess = () => {
           document.querySelector('#account-balance-container').innerText =
-            parseFloat(senderData.balance).toFixed(2)
+            parseFloat(senderData.balance).toLocaleString(undefined, {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2,
+            })
         }
       }
     }
@@ -212,12 +336,12 @@ const addTransferTransaction = () => {
       }
     }
   }
+  modal.classList.add('invisible')
+  alert('transaction successful')
 }
 
 const addPaymentTransaction = () => {
-  let amount = parseFloat(
-    document.querySelector('#payment-amount').value
-  ).toFixed(2)
+  let amount = parseFloat(document.querySelector('#payment-amount').value)
   const request = indexedDB.open('TransactionsDatabase', 1)
   const biller = document.querySelector('#biller').value
 
@@ -246,7 +370,7 @@ const addPaymentTransaction = () => {
       emailAddress: user,
       recipientAddress: biller,
       amount: amount,
-      type: transactionTypeSelector.value,
+      type: 'payment',
     })
     transaction.oncomplete = () => {
       console.log('added transaction')
@@ -271,15 +395,24 @@ const addPaymentTransaction = () => {
         const requestUpdate = store.put(payorData, payorKey.result)
         requestUpdate.onsuccess = () => {
           document.querySelector('#account-balance-container').innerText =
-            parseFloat(payorData.balance).toFixed(2)
+            parseFloat(payorData.balance).toLocaleString(undefined, {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2,
+            })
         }
       }
     }
   }
+  modal.classList.add('invisible')
+  alert('transaction successful')
 }
 
-const showTransactionContainer = () => {
-  document.querySelector('#transaction-container').classList.remove('invisible')
+const showAddTransactionContainer = () => {
+  document.querySelector('#transaction-modal').classList.remove('invisible')
+}
+
+const showAddAccountContainer = () => {
+  document.querySelector('#account-modal').classList.remove('invisible')
 }
 
 formDeposit.addEventListener('submit', (e) => {
@@ -288,61 +421,32 @@ formDeposit.addEventListener('submit', (e) => {
 formTransfer.addEventListener('submit', (e) => {
   e.preventDefault()
 })
-formPayment.addEventListener('submit', (e) => {
-  e.preventDefault()
-})
 
 // TODO: Submit Transactions
-const newTransactionBtn = document.querySelector('#add-transaction-btn')
+const addTransactionBtn = document.querySelector('#add-transaction-btn')
+const addAccountBtn = document.querySelector('#add-account-btn')
 const submitDepositBtn = document.querySelector('#submit-deposit-btn')
 const submitTransferBtn = document.querySelector('#submit-transfer-btn')
 const submitPaymentBtn = document.querySelector('#submit-payment-btn')
 
-newTransactionBtn.addEventListener('click', showTransactionContainer)
+addTransactionBtn.addEventListener('click', showAddTransactionContainer)
+addAccountBtn.addEventListener('click', showAddAccountContainer)
 submitDepositBtn.addEventListener('click', addDepositTransaction)
 submitTransferBtn.addEventListener('click', addTransferTransaction)
-submitPaymentBtn.addEventListener('click', addPaymentTransaction)
 
-const ctx = document.getElementById('myChart').getContext('2d')
-const myChart = new Chart(ctx, {
-  type: 'bar',
-  data: {
-    labels: ['red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
-    datasets: [
-      {
-        label: '# of Votes',
-        data: [12, 19, 3, 5, 2, 3],
-        backgroundColor: [
-          'rgba(255, 99, 132, 0.2)',
-          'rgba(54, 162, 235, 0.2)',
-          'rgba(255, 206, 86, 0.2)',
-          'rgba(75, 192, 192, 0.2)',
-          'rgba(153, 102, 255, 0.2)',
-          'rgba(255, 159, 64, 0.2)',
-        ],
-        borderColor: [
-          'rgba(255, 99, 132, 1)',
-          'rgba(54, 162, 235, 1)',
-          'rgba(255, 206, 86, 1)',
-          'rgba(75, 192, 192, 1)',
-          'rgba(153, 102, 255, 1)',
-          'rgba(255, 159, 64, 1)',
-        ],
-        borderWidth: 1,
-      },
-    ],
-  },
-  options: {
-    scales: {
-      y: {
-        beginAtZero: true,
-      },
-    },
-  },
-})
+const logoutBtn = document.querySelector('#logout')
+const handleLogout = () => {
+  sessionStorage.clear()
+  document.location = '../index.html'
+}
+logoutBtn.addEventListener('click', handleLogout)
 
-// TODO: 1. Sort table
-// 2. query TX for expense tracker
-// 3. create bank employee page
-// 4. add validation for all inputs
-// 5.
+const transactionModal = document.querySelector('#transaction-modal')
+const accountModal = document.querySelector('#account-modal')
+window.onclick = (event) => {
+  if (event.target == accountModal || event.target == transactionModal) {
+    accountModal.classList.add('invisible')
+    transactionModal.classList.add('invisible')
+    document.location = './admin.html'
+  }
+}

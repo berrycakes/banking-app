@@ -36,12 +36,6 @@ submitBtn.addEventListener('click', (e) => {
   const transaction = db.transaction('accounts', 'readwrite')
   const store = transaction.objectStore('accounts')
 
-  const firstNameIndex = store.index('firstName')
-  const middleNameIndex = store.index('middleName')
-  const lastNameIndex = store.index('lastName')
-  const emailAddress = store.index('emailAddress')
-  const password = store.index('password')
-
   let fName = document.querySelector('#first-name').value
   let mName = document.querySelector('#middle-name').value
   let lName = document.querySelector('#last-name').value

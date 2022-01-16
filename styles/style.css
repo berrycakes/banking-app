@@ -49,7 +49,9 @@ h3 {
 
 .balance-container,
 .income-container,
-.expense-container {
+.expense-container,
+.accounts-container,
+.transactions-container {
   text-align: right;
   margin: 10px;
   padding: 20px;
@@ -213,12 +215,8 @@ h3 {
   border-left: 2px solid white;
 }
 
-#activities {
-  width: 100%;
-  text-align: center;
-}
-
-#activity-container {
+#activity-container,
+#accounts-summary-container {
   width: 1fr;
   margin: 15px;
   background-color: rgba(255, 255, 255, 0.5);
@@ -280,6 +278,7 @@ h3 {
 }
 
 #add-transaction-btn,
+#add-account-btn,
 #add-income-btn,
 #submit-deposit-btn,
 #submit-transfer-btn,
@@ -305,6 +304,7 @@ h3 {
 }
 
 #add-transaction-btn:hover,
+#add-account-btn:hover,
 #add-income-btn:hover,
 #submit-deposit-btn:hover,
 #submit-transfer-btn:hover,
@@ -318,6 +318,11 @@ h3 {
 #deposit-amount,
 #recipient,
 #biller,
+#depositee,
+#deposit-date,
+#sender,
+#recipient,
+#transfer-date,
 #transfer-amount,
 #payment-amount {
   display: -webkit-box;
@@ -369,19 +374,55 @@ th,
 td {
   padding: 8px;
   text-align: center;
+}
+
+th {
+  text-transform: uppercase;
+  font-size: 0.8rem;
+}
+
+td {
+  padding: 20px 0;
   border-bottom: 1px solid #ddd;
 }
 
+table td:first-child {
+  border-radius: 15px 0 0 15px;
+}
+
+table th:first-child {
+  border-radius: 10px 0 0 10px;
+}
+
+table td:last-child {
+  border-radius: 0 15px 15px 0;
+}
+
+table th:last-child {
+  border-radius: 0 10px 10px 0;
+}
+
+#table-header {
+  background-color: #dddcfe;
+  margin-bottom: 10px;
+  opacity: 0.7;
+}
+
 #table-header:hover {
-  background-color: inherit;
+  background-color: #dddcfe;
   opacity: inherit;
   color: inherit;
 }
 
 tr:hover {
-  background-color: #796376;
-  opacity: 0.7;
+  background-color: #dddcfe;
   color: white;
+}
+
+#activities {
+  width: 100%;
+  text-align: center;
+  padding: 10px 100px;
 }
 
 html {
@@ -393,7 +434,6 @@ body {
   font-family: "Manrope", sans-serif;
   font-size: 1.2rem;
   color: #573353;
-  background-repeat: no-repeat;
   background-size: cover;
   background-blend-mode: color;
   background-image: url(../assets/background-gradient.jpg);
@@ -875,6 +915,27 @@ form {
           justify-content: center;
   position: fixed;
   z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: black;
+  background-color: rgba(0, 0, 0, 0.8);
+}
+
+.transaction-modal {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  position: fixed;
+  z-index: 3;
   left: 0;
   top: 0;
   width: 100%;

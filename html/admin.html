@@ -4,45 +4,183 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard</title>
+    <title>Admin - Onion Bank</title>
     <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css">
     <link rel="stylesheet" href="../styles/style.css">
 </head>
 <body class="dashboard">
     <nav class="dashboard-nav">
         <div><img id-="dashboard-nav-logo" src="../assets/onionbankmerged.png" ><a href="../index.html">Onion Bank</a></div>
-        <div id="greeting"> <span id="user-name">Admin</span> <img src='https://avatars.dicebear.com/api/bottts/admin.svg' alt="" id="avatar"></div>
+        <div id="greeting"> <span id="user-name"> Administrator</span></div>
         <a class="nav-option">Dashboard</a>
-        <a  class="nav-option">New Transaction</a>
-        <a  class="nav-option">Activities</a>
-        <a  class="nav-option">Logout</a>
-        
+        <a  class="nav-option">Accounts</a>
+        <a  class="nav-option">Transactions</a>
+        <a  class="nav-option" id="logout">Logout</a>
     </nav>
     <main class="dashboard-main">
+        
+        <div id="dashboard-cards">
+        <section class="balance-container">
+            <div><h3>Bank Treasury</h3></div>
+            <div><p id="account-balance-label">Total Balance</p></div>
+            <div><p id="account-balance-container" class="currency">Balance here</p></div>
+        </section>
 
-    <section id="transaction-container">
-        <form id="transfer-form">
-            <input type="email" name="recipient" id="recipient"  placeholder="recepient's email address" required>
-            <p id="available-balance"></p>
-            <input type="text" name="transfer-amount" id="transfer-amount" placeholder="amount" required>
-            <button id="submit-transfer-btn"> Confirm Transaction</button>
-        </form>
+        <section class="accounts-container">
+            <div><h3>Accounts</h3></div>
+            <div><p><span id="account-summary"></span> registered users</p></div>
+            <div><button id="add-account-btn">Add Account</button></div>
+        </section>
+
+        <section class="transactions-container">
+            <div><h3>Volume</h3></div>
+            <div><p><span id="transaction-summary"></span> total transactions</p></div>
+            <div><button id="add-transaction-btn">Add Transaction</button></div>
+        </section>
+
+        
+    </div>
+    <div class="modal invisible" id="transaction-modal" >
+    <section id="transaction-container" >
+        <div><h2>Add New Transaction</h2></div>
+            <select name="type" id="transaction-type">
+                <option value="">--SELECT TRANSACTION TYPE--</option>
+                <option value="deposit">Deposit</option>
+                <option value="transfer">Transfer</option>
+            </select>
+
+            <form id="deposit-form" class="invisible">
+                <input type="date"  name="deposit-date" id="deposit-date">
+                <input type="email"  name="depositee" id="depositee"  placeholder="depositee's email address" required>
+                <input type="number" min="0" name="deposit-amount" id="deposit-amount" placeholder="Amount" required>
+                <button id="submit-deposit-btn" type="button"> Confirm Transaction</button>
+            </form>
+
+            <form id="transfer-form" class="invisible">
+                <input type="date"  name="transfer-date" id="transfer-date">
+                <input type="email"  name="sender" id="sender"  placeholder="sender's email address" required>
+                <input type="email"  name="recipient" id="recipient"  placeholder="recepient's email address" required>
+                <!-- <p id="available-balance"></p> -->
+                <input type="number" min="0" name="transfer-amount" id="transfer-amount" placeholder="amount" required>
+                <button id="submit-transfer-btn"> Confirm Transaction</button>
+            </form>
     </section>
-
+    </div>
+    <div class="modal invisible" id="account-modal">
+        <section id="transaction-container">
+            <form class="form" id="signup">
+                <div><h2>Create New Account</h2></div>
+                <div class="login-fields-container">
+                  <i class="far fa-user"></i>
+                  <input
+                    type="text"
+                    class="login-field"
+                    id="first-name"
+                    name="first-name"
+                    placeholder="First Name"
+                    required
+                  />
+                </div>
+                <div class="login-fields-container">
+                  <i class="far fa-user"></i>
+                  <input
+                    type="text"
+                    class="login-field"
+                    id="middle-name"
+                    name="middle-name"
+                    placeholder="Middle Name"
+                    required
+                  />
+                </div>
+                <div class="login-fields-container">
+                  <i class="far fa-user"></i>
+                  <input
+                    type="text"
+                    class="login-field"
+                    id="last-name"
+                    name="last-name"
+                    placeholder="Last Name"
+                    required
+                  />
+                </div>
+      
+                <div class="login-fields-container">
+                  <i class="far fa-envelope"></i>
+                  <input
+                    type="text"
+                    class="login-field"
+                    id="email"
+                    name="email"
+                    placeholder="Email"
+                    required
+                  />
+                </div>
+                <div class="login-fields-container">
+                  <i class="far fa-lock"></i>
+                  <input
+                    type="password"
+                    class="login-field"
+                    id="password"
+                    name="password"
+                    placeholder="Password"
+                    required
+                  />
+                  <button id="show-password">Show</button>
+                  <button id="hide-password" class="invisible">Hide</button>
+                </div>
+                <div class="login-fields-container">
+                  <input
+                    type="submit"
+                    value="CREATE AN ACCOUNT"
+                    id="submit-signup-button"
+                  />
+                </div>
+              </form>
+        </section>
+      </div>
     <section id="activity-container">
-        <h2>Activities</h2>
-        <table id='activities'>
-            <tr>
-                <th>date and time</th>
-                <th>transaction type</th>
-                <th>recipient</th>
-                <th>amount</th>
-            </tr>
-            
+        <h2>Treasury Status</h2>
+        <div><canvas id="myChart" width="300" height="100"></canvas></div>
+    </section>
+    <section id="accounts-summary-container">
+        <h2>Accounts</h2>
+        <table>
+            <thead>
+                <tr id="table-header">
+                    <th></th>
+                    <th>email address</th>
+                    <th>last name</th>
+                    <th>first name</th>
+                    <th>middle name</th>
+                    <th>account balance</th>
+                </tr>
+            </thead>
+            <tbody id='accounts-summary'>
+            </tbody>
         </table>
     </section>
+    <section id="activity-container">
+        <h2>Transactions</h2>
+        <table>
+            <thead>
+                <tr id="table-header">
+                    <th>date and time</th>
+                    <th>account</th>
+                    <th>transaction type</th>
+                    <th>recipient</th>
+                    <th>amount</th>
+                </tr>
+            </thead>
+            <tbody id='activities'>
+            </tbody>
+        </table>
+    </section>
+    
     </main>
+    
+
     <script type="module" src="../js/admin.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.0/dist/chart.min.js"></script>
     </script>
 </body>
 

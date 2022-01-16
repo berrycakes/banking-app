@@ -7,7 +7,9 @@ h3 {
 
 .balance-container,
 .income-container,
-.expense-container {
+.expense-container,
+.accounts-container,
+.transactions-container {
   text-align: right;
   margin: 10px;
   padding: 20px;
@@ -135,12 +137,8 @@ h3 {
   }
 }
 
-#activities {
-  width: 100%;
-  text-align: center;
-}
-
-#activity-container {
+#activity-container,
+#accounts-summary-container {
   width: 1fr;
   margin: 15px;
   background-color: rgba(255, 255, 255, 0.5);
@@ -188,6 +186,7 @@ h3 {
 }
 
 #add-transaction-btn,
+#add-account-btn,
 #add-income-btn,
 #submit-deposit-btn,
 #submit-transfer-btn,
@@ -219,6 +218,11 @@ h3 {
 #deposit-amount,
 #recipient,
 #biller,
+#depositee,
+#deposit-date,
+#sender,
+#recipient,
+#transfer-date,
 #transfer-amount,
 #payment-amount {
   display: flex;
@@ -266,15 +270,49 @@ th,
 td {
   padding: 8px;
   text-align: center;
+}
+th {
+  text-transform: uppercase;
+  font-size: 0.8rem;
+}
+td {
+  padding: 20px 0;
   border-bottom: 1px solid #ddd;
 }
+
+table td:first-child {
+  border-radius: 15px 0 0 15px;
+}
+table th:first-child {
+  border-radius: 10px 0 0 10px;
+}
+
+table td:last-child {
+  border-radius: 0 15px 15px 0;
+}
+
+table th:last-child {
+  border-radius: 0 10px 10px 0;
+}
+
+#table-header {
+  background-color: $light;
+  margin-bottom: 10px;
+  opacity: 0.7;
+}
+
 #table-header:hover {
-  background-color: inherit;
+  background-color: $light;
   opacity: inherit;
   color: inherit;
 }
 tr:hover {
-  background-color: $gray;
-  opacity: 0.7;
+  background-color: $light;
   color: white;
+}
+
+#activities {
+  width: 100%;
+  text-align: center;
+  padding: 10px 100px;
 }
