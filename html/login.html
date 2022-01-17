@@ -28,13 +28,9 @@
     </nav>
     <main class="page-container">
       <section class="form-section" id="login-section">
-        <!-- <div class="title-container">
-                <img src="../assets/onionbankmerged.png" >
-                <h1 id="bank-title">Onion Bank</h1>
-            </div> -->
         <div class="form-container" id="login-form-container">
           <a href="#" id="login-email-link">Login with email</a>
-          <form class="form">
+          <form class="form" id="user-login-form">
             <div class="login-fields-container">
               <i class="far fa-envelope"></i>
               <input
@@ -45,6 +41,11 @@
                 placeholder="Email"
                 required
               />
+            </div>
+            <div>
+              <p id="email-error-text" class="error-text invisible">
+                Account does not exist
+              </p>
             </div>
             <div class="login-fields-container">
               <i class="far fa-lock"></i>
@@ -62,18 +63,55 @@
             <div class="login-fields-container">
               <input type="submit" value="LOGIN" id="submit-login-button" />
             </div>
-            <!-- <button
-              onclick="document.location='./admin.html'"
-              id="forgot-password-link"
-            >
-              Admin Login
-            </button> -->
+            <button id="admin-login" type="button">Admin Login</button>
             <button
               onclick="document.location='./signup.html'"
               id="sign-up-link"
             >
               Don't have an account? Sign Up
             </button>
+          </form>
+        </div>
+        <div class="form-container invisible" id="admin-login-form-container">
+          <a id="login-admin-link">Admin Login</a>
+          <form class="form" id="admin-form">
+            <div class="login-fields-container">
+              <i class="far fa-envelope"></i>
+              <input
+                type="text"
+                class="login-field"
+                id="email-admin"
+                name="email"
+                placeholder="Email"
+                required
+              />
+            </div>
+            <div>
+              <p id="admin-error-text" class="error-text invisible">
+                Account does not exist
+              </p>
+            </div>
+            <div class="login-fields-container">
+              <i class="far fa-lock"></i>
+              <input
+                type="password"
+                class="login-field"
+                id="password-admin"
+                name="password"
+                placeholder="Password"
+                required
+              />
+              <button id="show-admin-password">Show</button>
+              <button id="hide-admin-password" class="invisible">Hide</button>
+            </div>
+            <div class="login-fields-container">
+              <input
+                type="submit"
+                value="LOGIN"
+                id="submit-login-admin-button"
+              />
+            </div>
+            <button type="button" id="user-login">User Login</button>
           </form>
         </div>
         <div id="disclaimer">

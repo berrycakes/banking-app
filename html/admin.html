@@ -12,9 +12,9 @@
     <nav class="dashboard-nav">
         <div><img id-="dashboard-nav-logo" src="../assets/onionbankmerged.png" ><a href="../index.html">Onion Bank</a></div>
         <div id="greeting"> <span id="user-name"> Administrator</span></div>
-        <a class="nav-option">Dashboard</a>
-        <a  class="nav-option">Accounts</a>
-        <a  class="nav-option">Transactions</a>
+        <a href="#dashboard-cards" class="nav-option">Dashboard</a>
+        <a  href="#accounts-summary-container" class="nav-option">Accounts</a>
+        <a  href="#activity-container" class="nav-option">Transactions</a>
         <a  class="nav-option" id="logout">Logout</a>
     </nav>
     <main class="dashboard-main">
@@ -118,15 +118,13 @@
                 <div class="login-fields-container">
                   <i class="far fa-lock"></i>
                   <input
-                    type="password"
+                    type="text"
                     class="login-field"
                     id="password"
                     name="password"
                     placeholder="Password"
                     required
                   />
-                  <button id="show-password">Show</button>
-                  <button id="hide-password" class="invisible">Hide</button>
                 </div>
                 <div class="login-fields-container">
                   <input
@@ -138,9 +136,9 @@
               </form>
         </section>
       </div>
-    <section id="activity-container">
+    <section id="chart-container">
         <h2>Treasury Status</h2>
-        <div><canvas id="myChart" width="300" height="100"></canvas></div>
+        <div id="chart-area"><canvas id="myChart" width="300" height="120"></canvas></div>
     </section>
     <section id="accounts-summary-container">
         <h2>Accounts</h2>
@@ -161,26 +159,97 @@
     </section>
     <section id="activity-container">
         <h2>Transactions</h2>
-        <table>
-            <thead>
-                <tr id="table-header">
-                    <th>date and time</th>
-                    <th>account</th>
-                    <th>transaction type</th>
-                    <th>recipient</th>
-                    <th>amount</th>
-                </tr>
-            </thead>
-            <tbody id='activities'>
-            </tbody>
-        </table>
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr id="table-header">
+                        <th>date and time</th>
+                        <th>account</th>
+                        <th>transaction type</th>
+                        <th>recipient</th>
+                        <th>amount</th>
+                    </tr>
+                </thead>
+                <tbody id='activities'>
+                </tbody>
+            </table>
+        </div>
     </section>
+    <div class="modal invisible" id="account-information">
+        <section id="transaction-container">
+            <form class="form" id="edit-account-form">
+                <div><h2>Edit Account Information</h2></div>
+                <div class="login-fields-container">
+                  <i class="far fa-user"></i>
+                  <input
+                    type="text"
+                    class="login-field"
+                    id="first-name-edit"
+                    name="first-name"
+                    placeholder="First Name"
+                    required
+                  />
+                </div>
+                <div class="login-fields-container">
+                  <i class="far fa-user"></i>
+                  <input
+                    type="text"
+                    class="login-field"
+                    id="middle-name-edit"
+                    name="middle-name"
+                    placeholder="Middle Name"
+                    required
+                  />
+                </div>
+                <div class="login-fields-container">
+                  <i class="far fa-user"></i>
+                  <input
+                    type="text"
+                    class="login-field"
+                    id="last-name-edit"
+                    name="last-name"
+                    placeholder="Last Name"
+                    required
+                  />
+                </div>
+      
+                <div class="login-fields-container">
+                  <i class="far fa-envelope"></i>
+                  <input
+                    type="text"
+                    class="login-field"
+                    id="email-edit"
+                    name="email"
+                    placeholder="Email"
+                    required
+                  />
+                </div>
+                <div class="login-fields-container">
+                  <i class="far fa-lock"></i>
+                  <input
+                    type="text"
+                    class="login-field"
+                    id="password-edit"
+                    name="password"
+                    placeholder="Password"
+                    required
+                  />
+                </div>
+                <div class="login-fields-container">
+                  <input
+                    type="submit"
+                    value="UPDATE ACCOUNT"
+                    id="submit-edit-account-button"
+                  />
+                </div>
+              </form>
+        </section>
+      </div>
     
     </main>
     
 
     <script type="module" src="../js/admin.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.0/dist/chart.min.js"></script>
     </script>
 </body>
 

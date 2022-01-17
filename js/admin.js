@@ -26,6 +26,9 @@ const displayAccounts = () => {
           minimumFractionDigits: 2,
         })
       accounts.forEach((element, i) => {
+        let key = store.index('emailAddress').getKey([element.emailAddress])
+        key.onsuccess = () => {}
+        // console.log(key)
         const accountsSummary = document.querySelector('#accounts-summary')
         let tr = document.createElement('tr')
         accountsSummary.appendChild(tr)
@@ -40,6 +43,50 @@ const displayAccounts = () => {
                           minimumFractionDigits: 2,
                           maximumFractionDigits: 2,
                         })}</td>`
+        tr.addEventListener('click', (e) => {
+          document
+            .querySelector('#account-information')
+            .classList.remove('invisible')
+
+          const form = document.querySelector('#edit-account-form')
+          form.addEventListener('submit', (e) => e.preventDefault())
+          document.querySelector('#first-name-edit').value = element.firstName
+          document.querySelector('#middle-name-edit').value = element.middleName
+          document.querySelector('#last-name-edit').value = element.lastName
+          document.querySelector('#email-edit').value = element.emailAddress
+          document.querySelector('#password-edit').value = element.password
+
+          const editExistingAccount = () => {
+            const request = indexedDB.open('AccountsDatabase', 1)
+            request.onsuccess = () => {
+              const db = request.result
+              const transaction = db.transaction('accounts', 'readwrite')
+              const store = transaction.objectStore('accounts')
+              store.put(
+                {
+                  firstName: document
+                    .querySelector('#first-name-edit')
+                    .value.toUpperCase(),
+                  middleName: document
+                    .querySelector('#middle-name-edit')
+                    .value.toUpperCase(),
+                  lastName: document
+                    .querySelector('#last-name-edit')
+                    .value.toUpperCase(),
+                  emailAddress: document.querySelector('#email-edit').value,
+                  password: document.querySelector('#password-edit').value,
+                  balance: element.balance,
+                },
+                key.result
+              )
+            }
+            alert('Updated Account Successfully')
+            location.href = './admin.html'
+          }
+          document
+            .querySelector('#submit-edit-account-button')
+            .addEventListener('click', editExistingAccount)
+        })
       })
       transaction.oncomplete = () => db.close()
     }
@@ -78,9 +125,6 @@ const displayTransactions = () => {
 
     emailQuery.onerror = () => console.log('cannot fetch account data')
     emailQuery.onsuccess = () => {
-      // let depositsAmount = 0
-      // let withdrawAmount = 0
-      // let balance = depositsAmount - withdrawAmount
       let monthlyBalance = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
       const transactions = emailQuery.result
       document.querySelector('#transaction-summary').innerHTML =
@@ -162,6 +206,82 @@ const displayTransactions = () => {
   request.onerror = () => console.log('error tx db')
 }
 
+const addNewAccount = () => {
+  console.log('adding new account')
+  const request = indexedDB.open('AccountsDatabase', 1)
+
+  request.onerror = (event) => {
+    console.error('An error occured with indexedDB')
+    console.error(event)
+  }
+
+  request.onupgradeneeded = () => {
+    const db = request.result
+    if (!db.objectStoreNames.contains('accounts')) {
+      const store = db.createObjectStore('accounts', {
+        keypath: 'id',
+        autoIncrement: true,
+      })
+      store.createIndex('firstName', ['firstName'], { unique: false })
+      store.createIndex('middleName', ['middleName'], { unique: false })
+      store.createIndex('lastName', ['lastName'], { unique: false })
+      store.createIndex('emailAddress', ['emailAddress'], { unique: true })
+      store.createIndex('password', ['password'], { unique: false })
+      store.createIndex('balance', ['balance'], { unique: false })
+    }
+  }
+
+  request.onsuccess = () => {
+    const db = request.result
+    const transaction = db.transaction('accounts', 'readwrite')
+    const store = transaction.objectStore('accounts')
+
+    const checkExistingUser = () => {
+      document.querySelector('#email-error-text').classList.add('invisible')
+      const db = request.result
+      const transaction = db.transaction('accounts', 'readwrite')
+      const store = transaction.objectStore('accounts')
+      const emailQuery = store.index('emailAddress').getAll()
+      emailQuery.onerror = () => console.log('cannot fetch account data')
+      emailQuery.onsuccess = () => {
+        const accounts = emailQuery.result
+        accounts.forEach((element) => {
+          if (emailAddressField.value === element.emailAddress) {
+            document
+              .querySelector('#email-error-text')
+              .classList.remove('invisible')
+          }
+        })
+      }
+    }
+
+    const emailAddressField = document.querySelector('#email')
+    const form = document.querySelector('#signup')
+
+    emailAddressField.addEventListener('change', checkExistingUser)
+    form.addEventListener('submit', (e) => e.preventDefault())
+
+    let fName = document.querySelector('#first-name').value
+    let mName = document.querySelector('#middle-name').value
+    let lName = document.querySelector('#last-name').value
+    let emailAd = document.querySelector('#email').value
+    let pword = document.querySelector('#password').value
+
+    store.put({
+      firstName: fName.toUpperCase(),
+      middleName: mName.toUpperCase(),
+      lastName: lName.toUpperCase(),
+      emailAddress: emailAd,
+      password: pword,
+      balance: 0,
+    })
+
+    alert('Created Account Successfully')
+    location.href = './admin.html'
+  }
+  transaction.oncomplete = () => db.close()
+}
+
 // CHOOSE TRANSACTION
 const transactionTypeSelector = document.querySelector('#transaction-type')
 const formTransfer = document.querySelector('#transfer-form')
@@ -179,14 +299,6 @@ const selectTransactionType = (event) => {
     formTransfer.classList.add('invisible')
   }
 }
-
-// const addIncome = () => {
-//   document.querySelector('#transaction-type').classList.toggle('invisible')
-//   document.querySelector('#transaction-modal').classList.remove('invisible')
-//   formDeposit.classList.remove('invisible')
-//   formTransfer.classList.add('invisible')
-//   formPayment.classList.add('invisible')
-// }
 
 transactionTypeSelector.addEventListener('change', selectTransactionType)
 
@@ -256,23 +368,27 @@ const addDepositTransaction = () => {
 }
 
 const addTransferTransaction = () => {
-  let recipientAddress = document.querySelector('#recipient').value
+  let transferDate = document.querySelector('#transfer-date').value
+  let sender = document.querySelector('#sender').value
+  let recipient = document.querySelector('#recipient').value
   let amount = parseFloat(document.querySelector('#transfer-amount').value)
   const request = indexedDB.open('TransactionsDatabase', 1)
 
   request.onupgradeneeded = () => {
     const db = request.result
-    const store = db.createObjectStore('transactions', {
-      keypath: 'id',
-      autoIncrement: true,
-    })
-    store.createIndex('type', ['type'], { unique: false })
-    store.createIndex('timestamp', ['timestamp'], { unique: true })
-    store.createIndex('emailAddress', ['emailAddress'], { unique: false })
-    store.createIndex('recipientAddress', ['recipientAddress'], {
-      unique: false,
-    })
-    store.createIndex('amount', ['amount'], { unique: false })
+    if (!db.objectStoreNames.contains('transactions')) {
+      const store = db.createObjectStore('transactions', {
+        keypath: 'id',
+        autoIncrement: true,
+      })
+      store.createIndex('type', ['type'], { unique: false })
+      store.createIndex('timestamp', ['timestamp'], { unique: false })
+      store.createIndex('emailAddress', ['emailAddress'], { unique: false })
+      store.createIndex('recipientAddress', ['recipientAddress'], {
+        unique: false,
+      })
+      store.createIndex('amount', ['amount'], { unique: false })
+    }
   }
 
   request.onsuccess = () => {
@@ -281,11 +397,11 @@ const addTransferTransaction = () => {
     const store = transaction.objectStore('transactions')
 
     store.put({
-      timestamp: new Date(),
-      emailAddress: user,
-      recipientAddress: recipientAddress,
+      timestamp: new Date(transferDate),
+      emailAddress: sender,
       amount: amount,
       type: 'transfer',
+      recipientAddress: recipient,
     })
     transaction.oncomplete = () => {
       console.log('added transaction')
@@ -301,7 +417,7 @@ const addTransferTransaction = () => {
 
     const emailAddress = store.index('emailAddress')
 
-    const senderKey = emailAddress.getKey([user])
+    const senderKey = emailAddress.getKey([sender])
     senderKey.onsuccess = () => {
       console.log(senderKey.result)
       const senderQuery = store.get(senderKey.result)
@@ -319,7 +435,7 @@ const addTransferTransaction = () => {
       }
     }
 
-    const recipientKey = emailAddress.getKey([recipientAddress])
+    const recipientKey = emailAddress.getKey([recipient])
     recipientKey.onsuccess = () => {
       console.log(recipientKey.result)
       const recipientQuery = store.get(recipientKey.result)
@@ -336,74 +452,7 @@ const addTransferTransaction = () => {
       }
     }
   }
-  modal.classList.add('invisible')
-  alert('transaction successful')
-}
-
-const addPaymentTransaction = () => {
-  let amount = parseFloat(document.querySelector('#payment-amount').value)
-  const request = indexedDB.open('TransactionsDatabase', 1)
-  const biller = document.querySelector('#biller').value
-
-  request.onupgradeneeded = () => {
-    const db = request.result
-    const store = db.createObjectStore('transactions', {
-      keypath: 'id',
-      autoincrement: true,
-    })
-    store.createIndex('type', ['type'], { unique: false })
-    store.createIndex('timestamp', ['timestamp'], { unique: true })
-    store.createIndex('emailAddress', ['emailAddress'], { unique: false })
-    store.createIndex('recipientAddress', ['recipientAddress'], {
-      unique: false,
-    })
-    store.createIndex('amount', ['amount'], { unique: false })
-  }
-
-  request.onsuccess = () => {
-    const db = request.result
-    const transaction = db.transaction('transactions', 'readwrite')
-    const store = transaction.objectStore('transactions')
-
-    store.put({
-      timestamp: new Date(),
-      emailAddress: user,
-      recipientAddress: biller,
-      amount: amount,
-      type: 'payment',
-    })
-    transaction.oncomplete = () => {
-      console.log('added transaction')
-      db.close()
-    }
-  }
-
-  const requestAccount = indexedDB.open('AccountsDatabase', 1)
-  requestAccount.onsuccess = () => {
-    const db = requestAccount.result
-    const transaction = db.transaction('accounts', 'readwrite')
-    const store = transaction.objectStore('accounts')
-
-    const emailAddress = store.index('emailAddress')
-
-    const payorKey = emailAddress.getKey([user])
-    payorKey.onsuccess = () => {
-      const payorQuery = store.get(payorKey.result)
-      payorQuery.onsuccess = () => {
-        const payorData = payorQuery.result
-        payorData.balance -= amount
-        const requestUpdate = store.put(payorData, payorKey.result)
-        requestUpdate.onsuccess = () => {
-          document.querySelector('#account-balance-container').innerText =
-            parseFloat(payorData.balance).toLocaleString(undefined, {
-              minimumFractionDigits: 2,
-              maximumFractionDigits: 2,
-            })
-        }
-      }
-    }
-  }
-  modal.classList.add('invisible')
+  transactionModal.classList.add('invisible')
   alert('transaction successful')
 }
 
@@ -422,17 +471,17 @@ formTransfer.addEventListener('submit', (e) => {
   e.preventDefault()
 })
 
-// TODO: Submit Transactions
 const addTransactionBtn = document.querySelector('#add-transaction-btn')
 const addAccountBtn = document.querySelector('#add-account-btn')
 const submitDepositBtn = document.querySelector('#submit-deposit-btn')
 const submitTransferBtn = document.querySelector('#submit-transfer-btn')
-const submitPaymentBtn = document.querySelector('#submit-payment-btn')
+const submitCreateAcctBtn = document.querySelector('#submit-signup-button')
 
 addTransactionBtn.addEventListener('click', showAddTransactionContainer)
 addAccountBtn.addEventListener('click', showAddAccountContainer)
 submitDepositBtn.addEventListener('click', addDepositTransaction)
 submitTransferBtn.addEventListener('click', addTransferTransaction)
+submitCreateAcctBtn.addEventListener('click', addNewAccount)
 
 const logoutBtn = document.querySelector('#logout')
 const handleLogout = () => {
@@ -443,8 +492,13 @@ logoutBtn.addEventListener('click', handleLogout)
 
 const transactionModal = document.querySelector('#transaction-modal')
 const accountModal = document.querySelector('#account-modal')
+const accountInfoModal = document.querySelector('#account-information')
 window.onclick = (event) => {
-  if (event.target == accountModal || event.target == transactionModal) {
+  if (
+    event.target == accountModal ||
+    event.target == transactionModal ||
+    event.target == accountInfoModal
+  ) {
     accountModal.classList.add('invisible')
     transactionModal.classList.add('invisible')
     document.location = './admin.html'

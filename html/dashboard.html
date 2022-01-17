@@ -47,8 +47,9 @@
     </div>
     <div id="transaction-modal" class="modal invisible">
     <section id="transaction-container" >
+        <div><h2>Add New Transaction</h2></div>
             <select name="type" id="transaction-type">
-                <option value="">type of transaction</option>
+                <option value="">--SELECT TRANSACTION TYPE--</option>
                 <option value="transfer">Transfer</option>
                 <option value="payment">Pay Bills</option>
             </select>
@@ -59,26 +60,27 @@
             </form>
 
             <form id="transfer-form" class="invisible">
-                <input type="email" step=".01" min="0" name="recipient" id="recipient"  placeholder="recepient's email address" required>
+                <input type="email" name="recipient" id="recipient"  placeholder="recepient's email address" required>
                 <p id="available-balance"></p>
                 <input type="number" name="transfer-amount" id="transfer-amount" placeholder="amount" required>
                 <button id="submit-transfer-btn"> Confirm Transaction</button>
             </form>
 
             <form id="payment-form" class="invisible">
-                <select name="biller" id="biller">
+                <!-- <select name="biller" id="biller">
                     <option value="">Choose Biller</option>
                     <option value="meralco">Meralco</option>
                     <option value="pldt">PLDT</option>
-                </select>
-                <input type="number" step=".01" min="0" name="payment-amount" id="payment-amount" placeholder="amount" required>
+                </select> -->
+                <input type="text" id="biller" name="biller" placeholder="type of expense" required >
+                <input type="number" min="0" name="payment-amount" id="payment-amount" placeholder="amount" required>
                 <button id="submit-payment-btn"> Confirm Transaction</button>
             </form>
     </section>
     </div>
-    <section id="activity-container">
+    <section id="chart-container">
         <h2>Income and Expense Flow</h2>
-        <div><canvas id="myChart" width="300" height="100"></canvas></div>
+        <div id="chart-area"><canvas id="myChart" width="300" height="120"></canvas></div>
     </section>
     <section id="activity-container">
         <h2>Activities</h2>

@@ -74,7 +74,7 @@ const displayTransactions = () => {
       let depositsAmount = 0
       let transfersAmount = 0
       let paymentsAmount = 0
-      emailQuery.result.forEach((element) => {
+      emailQuery.result.reverse().forEach((element) => {
         const activities = document.querySelector('#activities')
         let tr = document.createElement('tr')
         activities.appendChild(tr)
@@ -123,21 +123,32 @@ const displayTransactions = () => {
               backgroundColor: [
                 'rgba(54, 162, 235, 0.2)',
                 'rgba(255, 206, 86, 0.2)',
-                'rgba(75, 192, 192, 0.2)',
+                'rgba(129, 140, 248, 0.2)',
               ],
               borderColor: [
                 'rgba(54, 162, 235, 1)',
                 'rgba(255, 206, 86, 1)',
-                'rgba(75, 192, 192, 1)',
+                'rgba(129, 140, 248, 1)',
               ],
               borderWidth: 1,
             },
           ],
         },
         options: {
+          plugins: {
+            legend: {
+              display: false,
+            },
+          },
           scales: {
             y: {
               beginAtZero: true,
+              ticks: {
+                // Include a dollar sign in the ticks
+                callback: function (value, index, ticks) {
+                  return '₱' + value
+                },
+              },
             },
           },
         },
@@ -254,17 +265,19 @@ const addTransferTransaction = () => {
 
   request.onupgradeneeded = () => {
     const db = request.result
-    const store = db.createObjectStore('transactions', {
-      keypath: 'id',
-      autoIncrement: true,
-    })
-    store.createIndex('type', ['type'], { unique: false })
-    store.createIndex('timestamp', ['timestamp'], { unique: true })
-    store.createIndex('emailAddress', ['emailAddress'], { unique: false })
-    store.createIndex('recipientAddress', ['recipientAddress'], {
-      unique: false,
-    })
-    store.createIndex('amount', ['amount'], { unique: false })
+    if (!db.objectStoreNames.contains('transactions')) {
+      const store = db.createObjectStore('transactions', {
+        keypath: 'id',
+        autoIncrement: true,
+      })
+      store.createIndex('type', ['type'], { unique: false })
+      store.createIndex('timestamp', ['timestamp'], { unique: false })
+      store.createIndex('emailAddress', ['emailAddress'], { unique: false })
+      store.createIndex('recipientAddress', ['recipientAddress'], {
+        unique: false,
+      })
+      store.createIndex('amount', ['amount'], { unique: false })
+    }
   }
 
   request.onsuccess = () => {
@@ -272,20 +285,16 @@ const addTransferTransaction = () => {
     const transaction = db.transaction('transactions', 'readwrite')
     const store = transaction.objectStore('transactions')
 
-    store.put(
-      {
-        timestamp: new Date(),
-        emailAddress: user,
-        recipientAddress: recipientAddress,
-        amount: amount,
-        type: 'transfer',
-      },
-      transactionKey
-    )
+    store.put({
+      timestamp: new Date(),
+      emailAddress: user,
+      recipientAddress: recipientAddress,
+      amount: amount,
+      type: 'transfer',
+    })
     transaction.oncomplete = () => {
       console.log('added transaction')
       db.close()
-      transactionKey++
     }
   }
 
@@ -343,17 +352,19 @@ const addPaymentTransaction = () => {
 
   request.onupgradeneeded = () => {
     const db = request.result
-    const store = db.createObjectStore('transactions', {
-      keypath: 'id',
-      autoincrement: true,
-    })
-    store.createIndex('type', ['type'], { unique: false })
-    store.createIndex('timestamp', ['timestamp'], { unique: true })
-    store.createIndex('emailAddress', ['emailAddress'], { unique: false })
-    store.createIndex('recipientAddress', ['recipientAddress'], {
-      unique: false,
-    })
-    store.createIndex('amount', ['amount'], { unique: false })
+    if (!db.objectStoreNames.contains('transactions')) {
+      const store = db.createObjectStore('transactions', {
+        keypath: 'id',
+        autoIncrement: true,
+      })
+      store.createIndex('type', ['type'], { unique: false })
+      store.createIndex('timestamp', ['timestamp'], { unique: false })
+      store.createIndex('emailAddress', ['emailAddress'], { unique: false })
+      store.createIndex('recipientAddress', ['recipientAddress'], {
+        unique: false,
+      })
+      store.createIndex('amount', ['amount'], { unique: false })
+    }
   }
 
   request.onsuccess = () => {
@@ -361,20 +372,16 @@ const addPaymentTransaction = () => {
     const transaction = db.transaction('transactions', 'readwrite')
     const store = transaction.objectStore('transactions')
 
-    store.put(
-      {
-        timestamp: new Date(),
-        emailAddress: user,
-        recipientAddress: biller,
-        amount: amount,
-        type: 'payment',
-      },
-      transactionKey
-    )
+    store.put({
+      timestamp: new Date(),
+      emailAddress: user,
+      recipientAddress: biller,
+      amount: amount,
+      type: 'payment',
+    })
     transaction.oncomplete = () => {
       console.log('added transaction')
       db.close()
-      transactionKey++
     }
   }
 
@@ -421,7 +428,6 @@ formPayment.addEventListener('submit', (e) => {
   e.preventDefault()
 })
 
-// TODO: Submit Transactions
 const addExpenseBtn = document.querySelector('#add-transaction-btn')
 const addIncomeBtn = document.querySelector('#add-income-btn')
 const submitDepositBtn = document.querySelector('#submit-deposit-btn')

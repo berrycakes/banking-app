@@ -4,6 +4,7 @@
 
 html {
   height: 100%;
+  scroll-behavior: smooth;
 }
 
 body {
@@ -86,7 +87,8 @@ h1 {
   margin: 10px;
   text-align: center;
 }
-#login-email-link {
+#login-email-link,
+#login-admin-link {
   color: inherit;
   margin: 20px;
   &:hover {
@@ -131,7 +133,9 @@ form {
 }
 
 #show-password,
-#hide-password {
+#hide-password,
+#show-admin-password,
+#hide-admin-password {
   opacity: 0.5;
   padding: 0 20px;
   text-decoration: underline;
@@ -145,7 +149,8 @@ form {
     color: $highlight;
   }
 }
-#forgot-password-link,
+#admin-login,
+#user-login,
 #sign-up-link {
   margin-top: 10px;
   padding: 0 20px;
@@ -181,7 +186,9 @@ form {
 }
 
 #submit-login-button,
-#submit-signup-button {
+#submit-signup-button,
+#submit-edit-account-button,
+#submit-login-admin-button {
   font-size: 1.2rem;
   color: $purple;
   height: inherit;
@@ -369,4 +376,12 @@ form {
   overflow: auto;
   background-color: rgb(0, 0, 0);
   background-color: rgba(0, 0, 0, 0.8);
+}
+
+.error-text {
+  font-size: 0.8rem;
+  text-align: right;
+  color: mediumvioletred;
+  margin: 0;
+  padding-right: 50px;
 }

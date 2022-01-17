@@ -42,10 +42,21 @@ submitBtn.addEventListener('click', (e) => {
   let emailAd = document.querySelector('#email').value
   let pword = document.querySelector('#password').value
 
+  if (
+    fName === '' ||
+    mName === '' ||
+    lName === '' ||
+    emailAd === '' ||
+    pword === ''
+  ) {
+    alert('All fields are required')
+    return
+  }
+
   store.put({
-    firstName: fName,
-    middleName: mName,
-    lastName: lName,
+    firstName: fName.toUpperCase(),
+    middleName: mName.toUpperCase(),
+    lastName: lName.toUpperCase(),
     emailAddress: emailAd,
     password: pword,
     balance: 0,
@@ -79,3 +90,24 @@ const hidePassword = (e) => {
 
 showPassBtn.addEventListener('click', showPassword)
 hidePassBtn.addEventListener('click', hidePassword)
+
+const checkExistingUser = () => {
+  document.querySelector('#email-error-text').classList.add('invisible')
+  const db = request.result
+  const transaction = db.transaction('accounts', 'readwrite')
+  const store = transaction.objectStore('accounts')
+  const emailQuery = store.index('emailAddress').getAll()
+  emailQuery.onerror = () => console.log('cannot fetch account data')
+  emailQuery.onsuccess = () => {
+    const accounts = emailQuery.result
+    accounts.forEach((element) => {
+      if (emailAddressField.value === element.emailAddress) {
+        document
+          .querySelector('#email-error-text')
+          .classList.remove('invisible')
+      }
+    })
+  }
+}
+const emailAddressField = document.querySelector('#email')
+emailAddressField.addEventListener('change', checkExistingUser)
