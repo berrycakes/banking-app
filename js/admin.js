@@ -200,6 +200,7 @@ const displayTransactions = () => {
           },
         },
       })
+      myChart()
       transaction.oncomplete = () => db.close()
     }
   }
